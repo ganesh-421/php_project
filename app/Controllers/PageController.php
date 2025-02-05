@@ -11,4 +11,9 @@ class PageController
         $test = new TestModel();
         require __DIR__ . '/../Views/front/landing.php';
     }
+
+    public function login()
+    {
+        require_once __DIR__ . '/../Views/front/login.php';
+    }
 }
