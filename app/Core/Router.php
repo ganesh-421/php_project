@@ -35,7 +35,7 @@ class Router
         } else {
             // handling of url pattern not found
             http_response_code(404);
-            echo "404 Not Found hello";
+            echo "404 Not Found";
         }
     }
 }
