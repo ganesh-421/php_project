@@ -2,10 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Models\TestModel;
+
 class PageController
 {
     public function landing()
     {
+        $test = new TestModel();
         require __DIR__ . '/../Views/front/landing.php';
     }
 }
