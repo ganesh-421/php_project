@@ -15,7 +15,7 @@ class Autoloader
                 $file = $base_dir . str_replace('\\', '/', $relative_class) . '.php';
 
                 if (file_exists($file)) {
-                    require $file;
+                    require_once $file;
                 }
             }
         });
