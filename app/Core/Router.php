@@ -18,9 +18,8 @@ class Router
 
     public static function dispatch()
     {
-        $original_uri = $_SERVER['REQUEST_URI'];
-
-        $uri = str_replace('/php_mvc/public', '', $original_uri);
+        $uri = $_SERVER['REQUEST_URI'];
+        
         $method = $_SERVER['REQUEST_METHOD'];
         // query parameters removal
         $uri = strtok($uri, '?');
