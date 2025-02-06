@@ -4,7 +4,7 @@
             <div class="bg-white p-4 shadow rounded-lg">
                 <div class="flex flex-col md:flex-row justify-between mb-4 space-y-2 md:space-y-0">
                     <input type="text" placeholder="Search..." class="border p-2 rounded-lg w-full md:w-auto">
-                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg">Create New</button>
+                    <a href="/create/artist" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Create New</a>
                 </div>
                 <table class="w-full border-collapse border border-gray-200">
                     <thead>
