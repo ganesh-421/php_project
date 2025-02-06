@@ -2,7 +2,7 @@
 
 use App\Core\Router;
 
-// Router::get('/', 'PageController@landing');
+Router::get('/', 'PageController@landing');
 
 Router::get('/login', 'PageController@login');
 Router::get('/register', 'PageController@register');

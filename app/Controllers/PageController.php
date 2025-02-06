@@ -9,8 +9,13 @@ class PageController
 {
     public function landing()
     {
-        $test = new TestModel();
-        require_once __DIR__ . '/../Views/front/landing.php';
+        // require_once __DIR__ . '/../Views/front/landing.php';
+        if($_SESSION['user_id'])
+        {
+            header("Location: /dashboard");
+        } else {
+            header("Location: /login");
+        }
     }
 
     public function login()
