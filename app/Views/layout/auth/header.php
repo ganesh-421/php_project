@@ -47,8 +47,8 @@
                             <i class="ph ph-caret-down ml-auto transition-transform rotate-180"></i>
                         </button>
                         <ul class="space-y-1 pl-4 dropdown-menu transition-all duration-300 ease-in-out origin-top scale-y-100">
-                            <li><a href="#" class="block p-2 hover:bg-gray-700">Music List</a></li>
-                            <li><a href="#" class="block p-2 hover:bg-gray-700">Add Music</a></li>
+                            <li><a href="/musics" class="block p-2 hover:bg-gray-700 <?= str_contains($_SERVER['REQUEST_URI'], '/musics') ? "bg-gray-700" : ""  ?>">Music List</a></li>
+                            <li><a href="/create/music" class="block p-2 hover:bg-gray-700 <?= str_contains($_SERVER['REQUEST_URI'], '/create/music') ? "bg-gray-700" : ""  ?>">Add Music</a></li>
                         </ul>
                     </li>
                 </ul>
