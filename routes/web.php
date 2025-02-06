@@ -20,4 +20,12 @@ Router::post('/delete/artist', 'ArtistController@delete');
 Router::get("/update/artist", 'ArtistController@edit');
 Router::post("/update/artist", 'ArtistController@edit');
 
+// musics
+Router::get('/musics', 'MusicController@index');
+Router::get('/create/music', 'MusicController@create');
+Router::post('/create/music', 'MusicController@create');
+Router::post('/delete/music', 'MusicController@delete');
+Router::get("/update/music", 'MusicController@edit');
+Router::post("/update/music", 'MusicController@edit');
+
 Router::dispatch();
