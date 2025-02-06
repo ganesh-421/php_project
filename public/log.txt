@@ -43,3 +43,11 @@ Array
     [first_release_year] => 2021
     [no_of_albums_released] => 101
 )
+Array
+(
+    [artist_id] => 1
+)
+Array
+(
+    [artist_id] => 2
+)

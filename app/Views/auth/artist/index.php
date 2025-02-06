@@ -20,16 +20,23 @@
                     </thead>
                     <tbody>
                         <?php foreach($artists as $key=>$artist) { ?>
+                            <?php 
+                                if($artist['gender'] === 'm')
+                                    $gender = "Male";
+                                else if($artist['gender'] === 'f')
+                                    $gender = "Female";
+                                else 
+                                    $gender = "Others";
+                            ?>
                             <tr>
                                 <td class="border p-2"><?= $artist['name']  ?></td>
-                                <td class="border p-2"><?= $artist['dob']  ?></td>
-                                <td class="border p-2"><?= $artist['gender']  ?></td>
+                                <td class="border p-2"><?= date('Y-m-d', strtotime($artist['dob']))  ?></td>
+                                <td class="border p-2"><?= $gender  ?></td>
                                 <td class="border p-2"><?= $artist['address']  ?></td>
                                 <td class="border p-2"><?= $artist['first_release_year']  ?></td>
                                 <td class="border p-2"><?= $artist['no_of_albums_released']  ?></td>
                                 <td class="border p-2 flex space-x-2">
-                                    <button class="text-blue-600 flex items-center"><i class="ph ph-pencil-line mr-1"></i> Edit</button>
-                                    <button class="text-green-600 flex items-center"><i class="ph ph-eye mr-1"></i> View</button>
+                                    <a href="/update/artist?artist_id=<?= $artist['id'] ?>" class="text-blue-600 flex items-center"><i class="ph ph-pencil-line mr-1"></i> Edit</a>
                                     <button onclick="showDeleteModal(<?= $artist['id']  ?>)" class="text-red-600 flex items-center"><i class="ph ph-trash mr-1"></i> Delete</button>
                                 </td>
                             </tr>
@@ -44,7 +51,10 @@
             <p class="text-lg">Are you sure you want to delete this item?</p>
             <div class="flex justify-end space-x-2 mt-4">
                 <button onclick="closeDeleteModal()" class="px-4 py-2 bg-gray-300 rounded-lg">Cancel</button>
-                <button class="px-4 py-2 bg-red-600 text-white rounded-lg">Delete</button>
+                <form action="/delete/artist" method="POST">
+                    <input type="hidden" name="artist_id" value="0" id="artist_id"/>
+                    <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg">Delete</button>
+                </form>
             </div>
         </div>
     </div>

@@ -42,6 +42,28 @@ class BaseModel
     }
 
     /**
+     * Update item in database
+     */
+    public function update($id, $columns, $values)
+    {
+        $qs = "";
+        for($i = 0; $i < count($columns); $i++)
+        {
+            if($i != (count($columns) -1))
+            {
+                $qs .= $columns[$i] . " = ?, ";
+            } else {
+                $qs .= $columns[$i] . " = ? ";
+            }
+        }
+        $query = "UPDATE " . $this->table . " SET " . $qs . " WHERE id = ?";
+        $stmt = $this->db->prepare($query);
+        array_push($values, $id);
+        $stmt->execute($values);
+        return true;
+    }
+
+    /**
      * find items by specified column
      */
      public function findBy($column, $value)
@@ -63,4 +85,15 @@ class BaseModel
         $stmt->execute();
         return $stmt->fetchAll();
       }
+
+    /**
+     * delete data 
+     */
+    public function delete($id)
+    {
+        $query = "DELETE FROM " . $this->table . " WHERE id=?";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$id]);
+        return true;
+    }
 }

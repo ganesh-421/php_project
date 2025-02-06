@@ -16,5 +16,8 @@ Router::get('/dashboard', 'PageController@dashboard');
 Router::get('/artists', 'ArtistController@index');
 Router::get('/create/artist', 'ArtistController@create');
 Router::post('/create/artist', 'ArtistController@create');
+Router::post('/delete/artist', 'ArtistController@delete');
+Router::get("/update/artist", 'ArtistController@edit');
+Router::post("/update/artist", 'ArtistController@edit');
 
 Router::dispatch();
