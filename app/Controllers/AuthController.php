@@ -19,14 +19,17 @@ class AuthController
             if($result)
             {
                 header("Location: /dashboard");
+                exit;
             } else {
                 $_SESSION['error'] = "Invalid Credentials";
                 header("Location: /login");
+                exit;
             }
         } else {
-            if($_SESSION['user_id'])
+            if($_SESSION['user_id'] ?? false)
             {
                 header("Location: /dashboard");
+                exit;
             }
             require_once __DIR__ . '/../Views/front/login.php';
         }
@@ -37,10 +40,12 @@ class AuthController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->repository->register($_POST);
             header("Location: /login");
+            exit;
         } else {
             if($_SESSION['user_id'])
             {
                 header("Location: /dashboard");
+                exit;
             }
             require_once __DIR__ . '/../Views/front/register.php';
         }

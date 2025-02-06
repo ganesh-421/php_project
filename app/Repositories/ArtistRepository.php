@@ -13,7 +13,7 @@ class ArtistRepository extends BaseRepository
     }
 
     /**
-     * registers nee user in database
+     * registers new user in database
      * @param array 
      * @return bool
      */
@@ -36,7 +36,7 @@ class ArtistRepository extends BaseRepository
         } catch(Exception $e)
         {
             $_SESSION['error'] = $e->getMessage();
-            return false;
+            return false; 
         }
     }
 

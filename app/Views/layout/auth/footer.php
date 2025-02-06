@@ -22,6 +22,11 @@
                 button.querySelector(".ph-caret-down").classList.toggle("rotate-180");
             });
         });
+
+        document.querySelector("form").addEventListener("submit", function() {
+            document.querySelector("button[type=submit]").disabled = true;
+        });
+
     </script>
 </body>
 </html>

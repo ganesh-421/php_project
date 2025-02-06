@@ -20,20 +20,19 @@
                     </thead>
                     <tbody>
                         <?php foreach($artists as $key=>$artist) { ?>
-
-                        <tr>
-                            <td class="border p-2"><?= $artist['name']  ?></td>
-                            <td class="border p-2"><?= $artist['dob']  ?></td>
-                            <td class="border p-2"><?= $artist['gender']  ?></td>
-                            <td class="border p-2"><?= $artist['address']  ?></td>
-                            <td class="border p-2"><?= $artist['first_release_year']  ?></td>
-                            <td class="border p-2"><?= $artist['no_of_albums_released']  ?></td>
-                            <td class="border p-2 flex space-x-2">
-                                <button class="text-blue-600 flex items-center"><i class="ph ph-pencil-line mr-1"></i> Edit</button>
-                                <button class="text-green-600 flex items-center"><i class="ph ph-eye mr-1"></i> View</button>
-                                <button onclick="showDeleteModal()" class="text-red-600 flex items-center"><i class="ph ph-trash mr-1"></i> Delete</button>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td class="border p-2"><?= $artist['name']  ?></td>
+                                <td class="border p-2"><?= $artist['dob']  ?></td>
+                                <td class="border p-2"><?= $artist['gender']  ?></td>
+                                <td class="border p-2"><?= $artist['address']  ?></td>
+                                <td class="border p-2"><?= $artist['first_release_year']  ?></td>
+                                <td class="border p-2"><?= $artist['no_of_albums_released']  ?></td>
+                                <td class="border p-2 flex space-x-2">
+                                    <button class="text-blue-600 flex items-center"><i class="ph ph-pencil-line mr-1"></i> Edit</button>
+                                    <button class="text-green-600 flex items-center"><i class="ph ph-eye mr-1"></i> View</button>
+                                    <button onclick="showDeleteModal(<?= $artist['id']  ?>)" class="text-red-600 flex items-center"><i class="ph ph-trash mr-1"></i> Delete</button>
+                                </td>
+                            </tr>
                         <?php } ?>
                     </tbody>
                 </table>

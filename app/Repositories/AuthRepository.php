@@ -79,6 +79,6 @@ class AuthRepository extends BaseRepository
     {
         return $this->findBy([
             'email' => $email
-        ]);
+        ])[0];
     }
 }
