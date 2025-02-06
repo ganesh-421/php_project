@@ -33,30 +33,20 @@
                 <ul>
                     <li class="mb-2">
                         <button class="w-full text-left p-2 hover:bg-gray-700 flex items-center dropdown-btn">
-                            <i class="ph ph-users text-lg mr-2"></i> Users
-                            <i class="ph ph-caret-down ml-auto transition-transform"></i>
-                        </button>
-                        <ul class="hidden space-y-1 pl-4 dropdown-menu transition-all duration-300 ease-in-out origin-top scale-y-0">
-                            <li><a href="#" class="block p-2 hover:bg-gray-700">User List</a></li>
-                            <li><a href="#" class="block p-2 hover:bg-gray-700">Add User</a></li>
-                        </ul>
-                    </li>
-                    <li class="mb-2">
-                        <button class="w-full text-left p-2 hover:bg-gray-700 flex items-center dropdown-btn">
                             <i class="ph ph-microphone text-lg mr-2"></i> Artists
-                            <i class="ph ph-caret-down ml-auto transition-transform"></i>
+                            <i class="ph ph-caret-down ml-auto transition-transform rotate-180"></i>
                         </button>
-                        <ul class="hidden space-y-1 pl-4 dropdown-menu transition-all duration-300 ease-in-out origin-top scale-y-0">
-                            <li><a href="#" class="block p-2 hover:bg-gray-700">Artist List</a></li>
-                            <li><a href="#" class="block p-2 hover:bg-gray-700">Add Artist</a></li>
+                        <ul class="space-y-1 pl-4 dropdown-menu transition-all duration-300 ease-in-out origin-top scale-y-100">
+                            <li><a href="/artists" class="block p-2 hover:bg-gray-700 <?= str_contains($_SERVER['REQUEST_URI'], '/artists') ? "bg-gray-700" : ""  ?>">Artist List</a></li>
+                            <li><a href="/create/artist" class="block p-2 hover:bg-gray-700 <?= str_contains($_SERVER['REQUEST_URI'], '/create/artist') ? "bg-gray-700" : ""  ?>">Add Artist</a></li>
                         </ul>
                     </li>
                     <li class="mb-2">
                         <button class="w-full text-left p-2 hover:bg-gray-700 flex items-center dropdown-btn">
                             <i class="ph ph-music-notes text-lg mr-2"></i> Music
-                            <i class="ph ph-caret-down ml-auto transition-transform"></i>
+                            <i class="ph ph-caret-down ml-auto transition-transform rotate-180"></i>
                         </button>
-                        <ul class="hidden space-y-1 pl-4 dropdown-menu transition-all duration-300 ease-in-out origin-top scale-y-0">
+                        <ul class="space-y-1 pl-4 dropdown-menu transition-all duration-300 ease-in-out origin-top scale-y-100">
                             <li><a href="#" class="block p-2 hover:bg-gray-700">Music List</a></li>
                             <li><a href="#" class="block p-2 hover:bg-gray-700">Add Music</a></li>
                         </ul>
@@ -64,34 +54,6 @@
                 </ul>
             </nav>
         </aside>
-
-        <!-- Main Content -->
         <main class="flex-1 p-6">
-            <div class="bg-white p-4 shadow rounded-lg">
-                <div class="flex flex-col md:flex-row justify-between mb-4 space-y-2 md:space-y-0">
-                    <input type="text" placeholder="Search..." class="border p-2 rounded-lg w-full md:w-auto">
-                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg">Create New</button>
-                </div>
-                <table class="w-full border-collapse border border-gray-200">
-                    <thead>
-                        <tr class="bg-gray-100">
-                            <th class="border p-2">Name</th>
-                            <th class="border p-2">Email</th>
-                            <th class="border p-2">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="border p-2">John Doe</td>
-                            <td class="border p-2">john@example.com</td>
-                            <td class="border p-2 flex space-x-2">
-                                <button class="text-blue-600 flex items-center"><i class="ph ph-pencil-line mr-1"></i> Edit</button>
-                                <button class="text-green-600 flex items-center"><i class="ph ph-eye mr-1"></i> View</button>
-                                <button onclick="showDeleteModal()" class="text-red-600 flex items-center"><i class="ph ph-trash mr-1"></i> Delete</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </main>
-    </div>
+
+            

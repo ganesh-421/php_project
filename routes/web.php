@@ -12,4 +12,9 @@ Router::post('/logout', 'AuthController@logout');
 
 Router::get('/dashboard', 'PageController@dashboard');
 
+// artists
+Router::get('/artists', 'ArtistController@index');
+Router::get('/create/artist', 'ArtistController@create');
+Router::post('/create/artist', 'ArtistController@create');
+
 Router::dispatch();
