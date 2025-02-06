@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . '/header.php'; ?>
+<?php require_once __DIR__ . '/../layout/guest/header.php'; ?>
 
         <h2 class="text-2xl font-semibold text-center text-gray-700">Admin Login</h2>
         
@@ -23,4 +23,4 @@
             <a href="/register" class="text-blue-600 hover:underline">Register here</a>
         </p>
 
-    <?php require_once  __DIR__ . '/footer.php'; ?>
+    <?php require_once  __DIR__ . '/../layout/guest/footer.php'; ?>

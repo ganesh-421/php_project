@@ -1,6 +1,4 @@
-<?php require_once __DIR__ . '/header.php'; ?>
-
-<div class="w-full max-w-xl p-6 bg-white rounded-lg shadow-md">
+<?php require_once __DIR__ . '/../layout/guest/header.php'; ?>
     <h2 class="text-2xl font-semibold text-center text-gray-700">Admin Register</h2>
 
     <form class="mt-6" action="/register" method="POST">
@@ -78,6 +76,5 @@
         Already have an account? 
         <a href="/login" class="text-blue-600 hover:underline">Login here</a>
     </p>
-</div>
 
-<?php require_once  __DIR__ . '/footer.php'; ?>
+<?php require_once  __DIR__ . '/../layout/guest/footer.php'; ?>
