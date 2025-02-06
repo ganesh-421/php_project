@@ -4,8 +4,6 @@ namespace App\Controllers;
 
 use App\Repositories\ArtistRepository;
 
-use function PHPSTORM_META\type;
-
 class ArtistController
 {
     private $repository;
@@ -58,6 +56,6 @@ class ArtistController
             $_SESSION['success'] = "Artist deleted succesfully";
             header("Location: /artists");
             exit;
-        } 
+        }
     }
 }
