@@ -1,7 +1,7 @@
 <?php require_once __DIR__ . '/../../layout/auth/header.php'; ?>
     <!-- Main Content -->
     <div class="bg-white p-4 shadow rounded-lg">
-        <form action="/update/artist" method="POST" class="space-y-4">
+        <form action="/update/artist" method="POST" class="space-y-4 p-4 border rounded-lg max-w-lg mx-auto">
             <input type="hidden" name="artist_id" value="<?= $artist['id'] ?>" />
             <div>
                 <label class="block text-sm font-medium">Name</label>
