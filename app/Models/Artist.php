@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-class User extends BaseModel
+class Artist extends BaseModel
 {
     public function __construct()
     {
         parent::__construct();
-        $this->table = "user";
+        $this->table = "artist";
     }
-    
 }
