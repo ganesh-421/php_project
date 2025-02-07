@@ -23,6 +23,7 @@
     </nav>
     <div class="bg-white p-4 shadow rounded-lg">
         <form class="space-y-4 p-4 border rounded-lg max-w-lg mx-auto" action="/update/user" method="POST">
+            <input type="hidden" name="user_id" value="<?= $_GET['user_id'] ?>" />
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <!-- First Name -->
                 <div>

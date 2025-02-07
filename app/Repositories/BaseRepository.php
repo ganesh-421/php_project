@@ -32,10 +32,10 @@ class BaseRepository
     public function update($id, array $data)
     {
         try {
-
             $cols = array_keys($data);
             $vals = array_values($data);
             $this->model->update($id, $cols, $vals);
+            return true;
         } catch(Exception $e)
         {
             $_SESSION['error'] = "Something Went Wrong";

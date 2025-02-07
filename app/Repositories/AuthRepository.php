@@ -24,24 +24,8 @@ class AuthRepository extends BaseRepository
             if($user)
             {
                 $_SESSION['error'] = "Email already exists";
-                unset($_SESSION['success']);
                 return false;
             }
-            
-            $data = [
-                "first_name" => $data['first_name'],
-                "last_name" => $data['last_name'],
-                "email" => $data['email'],
-                "password" => password_hash($data['password'], PASSWORD_DEFAULT),
-                "phone" => $data['phone'],
-                "dob" => $data['dob'],
-                "gender" => $data['gender'],
-                "address" => $data['address'],
-                "role" => $data['role'],
-                "created_at" => date('Y-m-d H:i:s'),
-                "updated_at" => date('Y-m-d H:i:s'),
-            ];
-
             $this->create($data);
             return true;
         } catch(Exception $e)
@@ -57,30 +41,14 @@ class AuthRepository extends BaseRepository
     public function edit($id, $data)
     {
         try {
-            $user = $this->findBy(['email' => $data['email']]);
-            if($user && ($user['id'] !== $id))
+            $user = $this->findBy(['email' => $data['email']])[0];
+            if($user && ($user['id'] != $id))
             {
                 $_SESSION['error'] = "Email already exists";
-                unset($_SESSION['success']);
                 return false;
             }
-
-            $data = [
-                "first_name" => $data['first_name'],
-                "last_name" => $data['last_name'],
-                "email" => $data['email'],
-                "password" => password_hash($data['password'], PASSWORD_DEFAULT),
-                "phone" => $data['phone'],
-                "dob" => $data['dob'],
-                "gender" => $data['gender'],
-                "address" => $data['address'],
-                "role" => $data['role'],
-                "created_at" => date('Y-m-d H:i:s'),
-                "updated_at" => date('Y-m-d H:i:s'),
-            ];
-            $this->update($id, $data);
-            $_SESSION['success'] = "User Succesfully Updated";
-            return true;
+            $result = $this->update($id, $data);
+            return $result;
         } catch(Exception $e) {
             $_SESSION['error'] = $e->getMessage();
             return false;

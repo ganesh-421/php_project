@@ -53,10 +53,10 @@
             </thead>
             <tbody>
                 <?php foreach($recent_songs as $key=>$song) { ?>
-                    <tr class="border">
+                    <tr class="border text-center">
                         <td class="py-2 px-4"><?= $song['title'] ?></td>
-                        <td class="py-2 px-4"><?= (new \App\Models\Artist())->findBy('id', $music['artist_id'])[0]['name'] ?></td>
-                        <td class="py-2 px-4">><?= $song['album_name'] ?></td>
+                        <td class="py-2 px-4"><?= (new \App\Models\Artist())->findBy('id', $song['artist_id'])[0]['name'] ?></td>
+                        <td class="py-2 px-4"><?= $song['album_name'] ?></td>
                     </tr>
                 <?php } ?>
             </tbody>

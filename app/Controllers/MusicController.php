@@ -85,7 +85,6 @@ class MusicController
                 "title" => $_POST['title'],
                 "album_name" => $_POST['album_name'],
                 "genre" => $_POST['genre'],
-                "created_at" => date('Y-m-d H:i:s'),
                 "updated_at" => date('Y-m-d H:i:s'),
             ];
             $result = $this->repository->update($id, $data);
@@ -96,7 +95,7 @@ class MusicController
                 exit;
             } else {
                 $_SESSION['error'] = "Music Couldn't be Updated";
-                header("Location: /edit/music?music_id=".$id);
+                header("Location: /update/music?music_id=".$id);
                 exit;
             }
         } else {
