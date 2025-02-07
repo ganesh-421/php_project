@@ -17,7 +17,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach($musics as $key=>$music) { ?>
+                        <?php foreach($musics['data'] as $key=>$music) { ?>
                             <tr>
                                 <td class="border p-2"><?= $music['title']  ?></td>
                                 <td class="border p-2"><?= (new \App\Models\Artist())->findBy('id', $music['artist_id'])[0]['name']  ?></td>
