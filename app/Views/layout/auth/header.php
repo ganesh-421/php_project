@@ -31,26 +31,32 @@
         <aside class="w-64 bg-gray-900 text-white min-h-screen p-4 hidden md:block transition-all duration-300 ease-in-out" id="sidebar">
             <nav>
                 <ul>
-                    <li class="mb-2">
-                        <button class="w-full text-left p-2 hover:bg-gray-700 flex items-center dropdown-btn">
-                            <i class="ph ph-microphone text-lg mr-2"></i> Users
-                            <i class="ph ph-caret-down ml-auto transition-transform rotate-180"></i>
-                        </button>
-                        <ul class="space-y-1 pl-4 dropdown-menu transition-all duration-300 ease-in-out origin-top scale-y-100">
-                            <li><a href="/users" class="block p-2 hover:bg-gray-700 <?= str_contains($_SERVER['REQUEST_URI'], '/users') ? "bg-gray-700" : ""  ?>">User List</a></li>
-                            <li><a href="/create/user" class="block p-2 hover:bg-gray-700 <?= str_contains($_SERVER['REQUEST_URI'], '/create/user') ? "bg-gray-700" : ""  ?>">Add User</a></li>
-                        </ul>
-                    </li>
-                    <li class="mb-2">
-                        <button class="w-full text-left p-2 hover:bg-gray-700 flex items-center dropdown-btn">
-                            <i class="ph ph-microphone text-lg mr-2"></i> Artists
-                            <i class="ph ph-caret-down ml-auto transition-transform rotate-180"></i>
-                        </button>
-                        <ul class="space-y-1 pl-4 dropdown-menu transition-all duration-300 ease-in-out origin-top scale-y-100">
-                            <li><a href="/artists" class="block p-2 hover:bg-gray-700 <?= str_contains($_SERVER['REQUEST_URI'], '/artists') ? "bg-gray-700" : ""  ?>">Artist List</a></li>
-                            <li><a href="/create/artist" class="block p-2 hover:bg-gray-700 <?= str_contains($_SERVER['REQUEST_URI'], '/create/artist') ? "bg-gray-700" : ""  ?>">Add Artist</a></li>
-                        </ul>
-                    </li>
+                    <?php if($_SESSION['role'] === 'super_admin') { ?>
+                        <li class="mb-2">
+                            <button class="w-full text-left p-2 hover:bg-gray-700 flex items-center dropdown-btn">
+                                <i class="ph ph-microphone text-lg mr-2"></i> Users
+                                <i class="ph ph-caret-down ml-auto transition-transform rotate-180"></i>
+                            </button>
+                            <ul class="space-y-1 pl-4 dropdown-menu transition-all duration-300 ease-in-out origin-top scale-y-100">
+                                <li><a href="/users" class="block p-2 hover:bg-gray-700 <?= str_contains($_SERVER['REQUEST_URI'], '/users') ? "bg-gray-700" : ""  ?>">User List</a></li>
+                                <li><a href="/create/user" class="block p-2 hover:bg-gray-700 <?= str_contains($_SERVER['REQUEST_URI'], '/create/user') ? "bg-gray-700" : ""  ?>">Add User</a></li>
+                            </ul>
+                        </li>
+                    <?php } ?>
+                    <?php if(($_SESSION['role'] === 'super_admin') || ($_SESSION['role'] === 'artist_manager')) { ?>
+                        <li class="mb-2">
+                            <button class="w-full text-left p-2 hover:bg-gray-700 flex items-center dropdown-btn">
+                                <i class="ph ph-microphone text-lg mr-2"></i> Artists
+                                <i class="ph ph-caret-down ml-auto transition-transform rotate-180"></i>
+                            </button>
+                            <ul class="space-y-1 pl-4 dropdown-menu transition-all duration-300 ease-in-out origin-top scale-y-100">
+                                <li><a href="/artists" class="block p-2 hover:bg-gray-700 <?= str_contains($_SERVER['REQUEST_URI'], '/artists') ? "bg-gray-700" : ""  ?>">Artist List</a></li>
+                                <?php if(($_SESSION['role'] === 'artist_manager')) { ?>
+                                    <li><a href="/create/artist" class="block p-2 hover:bg-gray-700 <?= str_contains($_SERVER['REQUEST_URI'], '/create/artist') ? "bg-gray-700" : ""  ?>">Add Artist</a></li>
+                                <?php } ?>
+                            </ul>
+                        </li>
+                    <?php } ?>
                     <li class="mb-2">
                         <button class="w-full text-left p-2 hover:bg-gray-700 flex items-center dropdown-btn">
                             <i class="ph ph-music-notes text-lg mr-2"></i> Music

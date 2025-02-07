@@ -56,7 +56,7 @@ class UserController
                 exit;
             }
         } else {
-            $artist = $this->repository->findBy(['id' => $id])[0];
+            $user = $this->repository->findBy(['id' => $id])[0];
             require_once __DIR__ . '/../Views/auth/user/edit.php';
         }
     }

@@ -30,7 +30,7 @@
                                     $gender = "Others";
                             ?>
                             <tr>
-                                <td class="border p-2"><?= $user['name']  ?></td>
+                                <td class="border p-2"><?= $user['first_name'] . " " . $user['last_name']  ?></td>
                                 <td class="border p-2"><?= $user['email']  ?></td>
                                 <td class="border p-2"><?= date('Y-m-d', strtotime($user['dob']))  ?></td>
                                 <td class="border p-2"><?= $gender  ?></td>
