@@ -57,4 +57,40 @@ class ArtistRepository extends BaseRepository
     {
         return $this->model->paginate($page, $per_page);
     }
+
+    /**
+     * exports data into csv
+     */
+    public function export($filename = "artists.csv")
+    {
+        $stream = fopen('exports/' . $filename, "w");
+        fputcsv($stream, $this->model->fields);
+        $data = $this->getAll();
+        foreach($data as $row)
+        {
+            fputcsv($stream, $row);
+        }
+        return fclose($stream);
+    }
+
+    /**
+     * store data from csv file into table
+     */
+    public function import($file)
+    {
+        $stream = fopen($file['tmp_name'], 'r');
+        fgetcsv($stream);
+        while(($row = fgetcsv($stream)) !== FALSE)
+        {
+            if(count($this->model->fields) !== count($row))
+            {
+                $_SESSION['error'] = "Invalid CSV file";
+                return false;
+            } else {
+                $data[] = $row;
+            }
+        }
+        $this->model->createMultiple($this->model->fields, $data);
+        return;
+    }
 }

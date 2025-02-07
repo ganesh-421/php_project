@@ -6,8 +6,10 @@
                 <input type="text" placeholder="Search..." class="border p-2 rounded-lg w-full md:w-auto">
                 <?php if(($_SESSION['role'] === 'artist_manager')) { ?>
                     <div class="flex gap-5">
-                        <a href="/create/artist" class="bg-gray-600 text-white px-4 py-2 rounded-lg" title="Impoer From CSV File">Import</a>
-                        <a href="/create/artist" class="bg-green-600 text-white px-4 py-2 rounded-lg" title="Export To CSV">Export</a>
+                        <button onclick="showCsvModal()" class="bg-gray-600 text-white px-4 py-2 rounded-lg" title="Impoer From CSV File">Import</button>
+                        <form action="/export/artist" method="POST">
+                            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg" title="Export To CSV">Export</button>
+                        </form>
                         <a href="/create/artist" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Create New</a>
                     </div>
                 <?php } ?>
@@ -42,7 +44,7 @@
                             <td class="border p-2"><?= $artist['first_release_year']  ?></td>
                             <td class="border p-2"><?= $artist['no_of_albums_released']  ?></td>
                             <td class="border p-2 flex space-x-2">
-                                <a href="/songs/artist?artist_id=<?= $artist['id'] ?>" class="text-blue-600 flex items-center"><i class="ph ph-pencil-line mr-1"></i> Songs</a>
+                                <a href="/musics?artist_id=<?= $artist['id'] ?>" class="text-green-600 flex items-center"><i class="ph ph-music-notes mr-1"></i> Songs</a>
                                 <?php if(($_SESSION['role'] === 'artist_manager')) { ?>
                                     <a href="/update/artist?artist_id=<?= $artist['id'] ?>" class="text-blue-600 flex items-center"><i class="ph ph-pencil-line mr-1"></i> Edit</a>
                                     <button onclick="showDeleteModal('artist_id', <?= $artist['id']  ?>)" class="text-red-600 flex items-center"><i class="ph ph-trash mr-1"></i> Delete</button>
@@ -52,6 +54,7 @@
                     <?php } ?>
                 </tbody>
             </table>
+            <!-- Pagination -->
             <div class="flex space-x-1 mt-1 items-center justify-end">
                 <small class="text-gray-500 hover:text-gray-600">
                     <?= "Showing from " . $artists['from'] . " to " . $artists['to'] . " out of " . $artists['total'] . " records" ?>
@@ -109,6 +112,23 @@
                     <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg">Delete</button>
                 </form>
             </div>
+        </div>
+    </div>
+
+    <!-- Import CSV  -->
+    <div id="csv-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center" onclick="closeCsvModal()">
+        <div class="bg-white p-6 rounded-lg shadow-lg transform scale-95 transition-transform" onclick="event.stopPropagation()">
+            <p class="text-lg">Upload CSV file:</p>
+                <form action="/import/artist" class="float-left" method="POST" enctype="multipart/form-data">
+                    <div class="font-[sans-serif] max-w-md mx-auto">
+                        <label class="text-base text-gray-500 font-semibold mb-2 block">Upload file</label>
+                        <input type="file" name="csv_file" required
+                            class="w-full text-gray-400 font-semibold text-sm bg-white border file:cursor-pointer cursor-pointer file:border-0 file:py-3 file:px-4 file:mr-4 file:bg-gray-100 file:hover:bg-gray-200 file:text-gray-500 rounded" />
+                        <p class="text-xs text-gray-400 mt-2">Only csv Allowed.</p>
+                    </div>                    
+                    <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg"><i class="ph ph-upload mr-1"></i>Upload</button>
+                </form>
+                <button onclick="closeCsvModal(this)" class="px-4 py-2 bg-gray-300 rounded-lg mt-24">Cancel</button>
         </div>
     </div>
 

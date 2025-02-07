@@ -19,7 +19,8 @@ class MusicController
     }
     public function index()
     {
-        $musics = $this->repository->getAll();
+        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+        $musics = $this->repository->paginated($page, 5);
         require_once __DIR__ . '/../Views/auth/music/index.php';
     }
 

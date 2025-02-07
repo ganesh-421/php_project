@@ -14,6 +14,18 @@
         function closeDeleteModal() {
             document.getElementById('delete-modal').classList.add('hidden');
         }
+        
+        function closeDeleteModal() {
+            document.getElementById('delete-modal').classList.add('hidden');
+        }
+
+        function showCsvModal() {
+            document.getElementById('csv-modal').classList.remove('hidden');
+        }
+
+        function closeCsvModal(event) {
+            document.getElementById('csv-modal').classList.add('hidden');
+        }
 
         document.querySelectorAll(".dropdown-btn").forEach(button => {
             button.addEventListener("click", () => {
