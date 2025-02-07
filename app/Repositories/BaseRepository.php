@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Core\Database;
+use Exception;
 
 class BaseRepository
 {
@@ -13,9 +14,16 @@ class BaseRepository
 
     public function create(array $data)
     {
-        $cols = array_keys($data);
-        $vals = array_values($data);
-        $this->model->create($cols, $vals);
+        try {
+
+            $cols = array_keys($data);
+            $vals = array_values($data);
+           return $this->model->create($cols, $vals);
+        } catch(Exception $e)
+        {
+            $_SESSION['error'] = "Something Went Wrong";
+            return false;
+        }
     }
 
     /**
@@ -23,9 +31,16 @@ class BaseRepository
      */
     public function update($id, array $data)
     {
-        $cols = array_keys($data);
-        $vals = array_values($data);
-        $this->model->update($id, $cols, $vals);
+        try {
+            $cols = array_keys($data);
+            $vals = array_values($data);
+            $this->model->update($id, $cols, $vals);
+            return true;
+        } catch(Exception $e)
+        {
+            $_SESSION['error'] = "Something Went Wrong";
+            return false;
+        }
     }
 
     /**
@@ -33,9 +48,16 @@ class BaseRepository
      */
     public function findBy($data)
     {
-        $col = array_keys($data)[0];
-        $val = $data[$col];
-        return $this->model->findBy($col, $val);
+        try {
+
+            $col = array_keys($data)[0];
+            $val = $data[$col];
+            return $this->model->findBy($col, $val);
+        } catch(Exception $e)
+        {
+            $_SESSION['error'] = "Something Went Wrong";
+            return false;
+        }
     }
 
     /**
@@ -43,7 +65,14 @@ class BaseRepository
      */
     public function delete($id)
     {
-        return $this->model->delete($id);
+        try {
+
+            return $this->model->delete($id);
+        } catch(Exception $e)
+        {
+            $_SESSION['error'] = "Something Went Wrong";
+            return false;
+        }
     }
    
 }

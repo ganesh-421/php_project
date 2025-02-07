@@ -51,3 +51,7 @@ Array
 (
     [artist_id] => 2
 )
+Array
+(
+    [artist_id] => 3
+)
