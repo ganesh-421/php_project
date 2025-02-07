@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
+    <title>Music And Artists CMS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 <body class="bg-gray-100">
     <!-- Top Navigation Bar -->
     <nav class="bg-white shadow-md p-4 flex justify-between items-center fixed top-0 w-full z-50">
-        <span class="text-xl font-bold">Admin Panel</span>
+        <span class="text-xl font-bold"><?= $_SESSION['role'] ?></span>
         <div class="relative">
             <button id="user-menu-btn" class="flex items-center space-x-2 focus:outline-none">
                 <img src="https://i.pravatar.cc/40" class="w-8 h-8 rounded-full">

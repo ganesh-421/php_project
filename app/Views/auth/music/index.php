@@ -25,7 +25,7 @@
                                 <td class="border p-2"><?= $music['genre']  ?></td>
                                 <td class="border p-2 flex space-x-2">
                                     <a href="/update/music?music_id=<?= $music['id'] ?>" class="text-blue-600 flex items-center"><i class="ph ph-pencil-line mr-1"></i> Edit</a>
-                                    <button onclick="showDeleteModal(<?= $music['id']  ?>)" class="text-red-600 flex items-center"><i class="ph ph-trash mr-1"></i> Delete</button>
+                                    <button onclick="showDeleteModal('music_id', <?= $music['id']  ?>)" class="text-red-600 flex items-center"><i class="ph ph-trash mr-1"></i> Delete</button>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -40,7 +40,7 @@
             <div class="flex justify-end space-x-2 mt-4">
                 <button onclick="closeDeleteModal()" class="px-4 py-2 bg-gray-300 rounded-lg">Cancel</button>
                 <form action="/delete/artist" method="POST">
-                    <input type="hidden" name="artist_id" value="0" id="artist_id"/>
+                    <input type="hidden" name="music_id" value="0" id="music_id"/>
                     <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg">Delete</button>
                 </form>
             </div>

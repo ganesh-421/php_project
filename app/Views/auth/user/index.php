@@ -39,7 +39,7 @@
                                 <td class="border p-2"><?= $user['role']  ?></td>
                                 <td class="border p-2 flex space-x-2">
                                     <a href="/update/user?user_id=<?= $user['id'] ?>" class="text-blue-600 flex items-center"><i class="ph ph-pencil-line mr-1"></i> Edit</a>
-                                    <button onclick="showDeleteModal(<?= $user['id']  ?>)" class="text-red-600 flex items-center"><i class="ph ph-trash mr-1"></i> Delete</button>
+                                    <button onclick="showDeleteModal('user_id' ,<?= $user['id']  ?>)" class="text-red-600 flex items-center"><i class="ph ph-trash mr-1"></i> Delete</button>
                                 </td>
                             </tr>
                         <?php } ?>
@@ -53,8 +53,8 @@
             <p class="text-lg">Are you sure you want to delete this item?</p>
             <div class="flex justify-end space-x-2 mt-4">
                 <button onclick="closeDeleteModal()" class="px-4 py-2 bg-gray-300 rounded-lg">Cancel</button>
-                <form action="/delete/artist" method="POST">
-                    <input type="hidden" name="artist_id" value="0" id="artist_id"/>
+                <form action="/delete/user" method="POST">
+                    <input type="hidden" name="user_id" value="0" id="user_id"/>
                     <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg">Delete</button>
                 </form>
             </div>

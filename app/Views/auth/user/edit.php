@@ -68,7 +68,7 @@
             </div>
 
             <div class="mt-6">
-                <button type="submit" class="w-full px-4 py-2 font-bold text-white bg-blue-600 rounded-lg hover:bg-blue-700">Register</button>
+                <button type="submit" class="w-full px-4 py-2 font-bold text-white bg-blue-600 rounded-lg hover:bg-blue-700">Update</button>
             </div>
         </form>
     </div>
