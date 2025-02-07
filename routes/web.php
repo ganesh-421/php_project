@@ -20,6 +20,7 @@ Router::post('/delete/artist', 'ArtistController@delete');
 Router::get("/update/artist", 'ArtistController@edit');
 Router::post("/update/artist", 'ArtistController@edit');
 Router::post("/export/artist", 'ArtistController@exportCsv');
+Router::post("/import/artist", 'ArtistController@importCsv');
 
 // musics
 Router::get('/musics', 'MusicController@index');

@@ -80,4 +80,41 @@ class ArtistController
         $_SESSION['success'] = "All Records Exported";
         exit();
     }
+
+    public function importCsv()
+    {
+        if (isset($_FILES['csv_file'])) {
+            $file = $_FILES['csv_file'];
+            
+            $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+            if (strtolower($extension) !== 'csv') {
+                $_SESSION['error'] = "Only csv are valid.";
+                unset($_SESSION['success']);
+                header("Location: /artists");
+                exit;
+            }
+            
+            if ($file['error'] !== UPLOAD_ERR_OK) {
+                $_SESSION['error'] = "Error while file upload.";
+                unset($_SESSION['success']);
+                header("Location: /artists");
+                exit;
+            }
+            
+            $result = $this->repository->import($file);
+            if(!$result)
+            {
+                $_SESSION['error'] = "Import Failed";
+                header("Location: /artists");
+                exit;
+            }
+            $_SESSION['success'] = "Succesfully Imported";
+            header("Location: /artists");
+            exit;
+        } else {
+            $_SESSION['success'] = "No file uploaded.";
+            header("Location: /artists");
+            exit;
+        }
+    }
 }

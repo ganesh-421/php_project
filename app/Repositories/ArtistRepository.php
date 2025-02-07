@@ -72,4 +72,25 @@ class ArtistRepository extends BaseRepository
         }
         return fclose($stream);
     }
+
+    /**
+     * store data from csv file into table
+     */
+    public function import($file)
+    {
+        $stream = fopen($file['tmp_name'], 'r');
+        fgetcsv($stream);
+        while(($row = fgetcsv($stream)) !== FALSE)
+        {
+            if(count($this->model->fields) !== count($row))
+            {
+                $_SESSION['error'] = "Invalid CSV file";
+                return false;
+            } else {
+                $data[] = $row;
+            }
+        }
+        $this->model->createMultiple($this->model->fields, $data);
+        return;
+    }
 }

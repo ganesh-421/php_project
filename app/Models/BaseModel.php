@@ -43,6 +43,32 @@ class BaseModel
     }
 
     /**
+     * Insert multiple data at once
+     */
+    public function createMultiple($columns, $values)
+    {
+        $columns = implode(",",$columns);
+        $rows = [];
+        foreach($values as $key => $row)
+        {
+            $bindings = [];
+            for($i = 0; $i<count($row); $i++)
+            {
+                $bindings[$i] = "?";
+            }
+            $qs[$key] = "(" . implode(",", $bindings) . ")";
+            $rows = array_merge($rows, $row);
+        }
+
+        $query = "INSERT INTO " . $this->table . "(" . $columns . ") VALUES " . implode(",", $qs);
+
+        $stmt = $this->db->prepare($query);
+
+        $stmt->execute($rows);
+
+    }
+
+    /**
      * Update item in database
      */
     public function update($id, $columns, $values)
