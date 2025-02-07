@@ -12,10 +12,10 @@
         <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
             <span class="font-medium">Error!</span> <?php echo $_SESSION['error']; ?>
         </div>
-    <?php } ?>
+    <?php } unset($_SESSION['error']) ?>
 
     <?php if($_SESSION['success']) { ?>
         <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">
             <span class="font-medium">Success!</span> <?php echo $_SESSION['success']; ?>
         </div>
-    <?php } ?>
+    <?php } unset($_SESSION['success'])?>

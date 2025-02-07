@@ -154,4 +154,15 @@ class BaseModel
         $stmt->execute([$id]);
         return true;
     }
+
+    /**
+     * return count of total data
+     */
+    public function countAll()
+    {
+        $query = "SELECT COUNT(*) AS count FROM " . $this->table;
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        return $stmt->fetch()['count'];
+    }
 }

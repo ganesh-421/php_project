@@ -1,5 +1,26 @@
 <?php require_once __DIR__ . '/../../layout/auth/header.php'; ?>
-    <!-- Main Content -->
+    <nav aria-label="breadcrumb" class="w-full mb-3">
+        <ol class="flex w-full flex-wrap items-center rounded-md bg-slate-50 px-4 py-2">
+            <li class="flex cursor-pointer items-center text-sm text-slate-500 transition-colors duration-300 hover:text-slate-800">
+                <a href="/dashboard">Dashboard</a>
+                <span class="pointer-events-none mx-2 text-slate-800">
+                    /
+                </span>
+            </li>
+            <li class="flex cursor-pointer items-center text-sm text-slate-500 transition-colors duration-300 hover:text-slate-800">
+                <a href="/users">Users</a>
+                <span class="pointer-events-none mx-2 text-slate-800">
+                    /
+                </span>
+            </li>
+            <li class="flex cursor-pointer items-center text-sm text-slate-500 transition-colors duration-300 hover:text-slate-800">
+                <a href="/create/user">Create</a>
+                <span class="pointer-events-none mx-2 text-slate-800">
+                    /
+                </span>
+            </li>
+        </ol>
+    </nav>
     <div class="bg-white p-4 shadow rounded-lg">
         <form class="space-y-4 p-4 border rounded-lg max-w-lg mx-auto" action="/create/user" method="POST">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">

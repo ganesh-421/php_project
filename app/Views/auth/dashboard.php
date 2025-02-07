@@ -1,42 +1,65 @@
 <?php require_once __DIR__ . '/../layout/auth/header.php'; ?>
-    <!-- Main Content -->
-    <main class="flex-1 p-6">
-            <div class="bg-white p-4 shadow rounded-lg">
-                <div class="flex flex-col md:flex-row justify-between mb-4 space-y-2 md:space-y-0">
-                    <input type="text" placeholder="Search..." class="border p-2 rounded-lg w-full md:w-auto">
-                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg">Create New</button>
-                </div>
-                <table class="w-full border-collapse border border-gray-200">
-                    <thead>
-                        <tr class="bg-gray-100">
-                            <th class="border p-2">Name</th>
-                            <th class="border p-2">Email</th>
-                            <th class="border p-2">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="border p-2">John Doe</td>
-                            <td class="border p-2">john@example.com</td>
-                            <td class="border p-2 flex space-x-2">
-                                <button class="text-blue-600 flex items-center"><i class="ph ph-pencil-line mr-1"></i> Edit</button>
-                                <button class="text-green-600 flex items-center"><i class="ph ph-eye mr-1"></i> View</button>
-                                <button onclick="showDeleteModal()" class="text-red-600 flex items-center"><i class="ph ph-trash mr-1"></i> Delete</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+    <nav aria-label="breadcrumb" class="w-full mb-3">
+        <ol class="flex w-full flex-wrap items-center rounded-md bg-slate-50 px-4 py-2">
+            <li class="flex cursor-pointer items-center text-sm text-slate-500 transition-colors duration-300 hover:text-slate-800">
+            <a href="/dashboard">Dashboard</a>
+            <span class="pointer-events-none mx-2 text-slate-800">
+                /
+            </span>
+            </li>
+        </ol>
+    </nav>
+    <!-- Stats Section -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
+            <div class="p-4 bg-blue-500 text-white rounded-lg">
+                🎵
             </div>
-        </main>
-    <!-- Delete Confirmation Modal -->
-    <div id="delete-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center" onclick="closeDeleteModal()">
-        <div class="bg-white p-6 rounded-lg shadow-lg transform scale-95 transition-transform" onclick="event.stopPropagation()">
-            <p class="text-lg">Are you sure you want to delete this item?</p>
-            <div class="flex justify-end space-x-2 mt-4">
-                <button onclick="closeDeleteModal()" class="px-4 py-2 bg-gray-300 rounded-lg">Cancel</button>
-                <button class="px-4 py-2 bg-red-600 text-white rounded-lg">Delete</button>
+            <div class="ml-4">
+                <h2 class="text-xl font-bold">Total Songs</h2>
+                <p class="text-gray-600 text-lg"><?= $music_count ?></p>
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
+            <div class="p-4 bg-green-500 text-white rounded-lg">
+                🎤
+            </div>
+            <div class="ml-4">
+                <h2 class="text-xl font-bold">Total Artists</h2>
+                <p class="text-gray-600 text-lg"><?= $artist_count ?></p>
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
+            <div class="p-4 bg-purple-500 text-white rounded-lg">
+                📀
+            </div>
+            <div class="ml-4">
+                <h2 class="text-xl font-bold">Total Users</h2>
+                <p class="text-gray-600 text-lg"><?= $user_count ?></p>
             </div>
         </div>
     </div>
 
+    <!-- Recent Songs Table -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-bold mb-4">Recent Songs</h2>
+        <table class="w-full border-collapse">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="py-2 px-4 border">Title</th>
+                    <th class="py-2 px-4 border">Artist</th>
+                    <th class="py-2 px-4 border">Album</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($recent_songs as $key=>$song) { ?>
+                    <tr class="border">
+                        <td class="py-2 px-4"><?= $song['title'] ?></td>
+                        <td class="py-2 px-4"><?= (new \App\Models\Artist())->findBy('id', $music['artist_id'])[0]['name'] ?></td>
+                        <td class="py-2 px-4">><?= $song['album_name'] ?></td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
 <?php require_once __DIR__ . '/../layout/auth/footer.php'; ?>

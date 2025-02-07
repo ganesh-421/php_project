@@ -12,6 +12,7 @@ class MusicController
     {
         if(!$_SESSION['user_id'])
         {
+            $_SESSION['error'] = "Session Expired";
             header("Location: /login");
             exit;
         }
@@ -36,7 +37,8 @@ class MusicController
     {
         if($_SESSION['role'] != 'artist')
         {
-            header("Location: /", true, 403);
+            $_SESSION['error'] = "Unauthorized.";
+            header("Location: /");
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
@@ -47,9 +49,17 @@ class MusicController
                 "created_at" => date('Y-m-d H:i:s'),
                 "updated_at" => date('Y-m-d H:i:s'),
             ];
-            $this->repository->add($data);
-            header("Location: /musics");
-            exit;
+            $result = $this->repository->add($data);
+            if($result) 
+            {
+                $_SESSION['success'] = "Music Added Succesfully";
+                header("Location: /musics");
+                exit;
+            } else {
+                $_SESSION['error'] = "Music Couldn't be Added";
+                header("Location: /create/music");
+                exit;
+            }
         } else {
             if($_SESSION['role'] != 'artist')
             {
@@ -65,11 +75,11 @@ class MusicController
     {
         if($_SESSION['role'] != 'artist')
         {
-            header("Location: /", true, 403);
+            $_SESSION['error'] = "Unauthorized.";
+            header("Location: /");
         }
         $id = $_REQUEST['music_id'];
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            unset($_POST['music_id']);
             $data = [
                 "artist_id" => $_REQUEST['artist_id'],
                 "title" => $_POST['title'],
@@ -78,13 +88,22 @@ class MusicController
                 "created_at" => date('Y-m-d H:i:s'),
                 "updated_at" => date('Y-m-d H:i:s'),
             ];
-            $this->repository->update($id, $data);
-            header("Location: /musics");
-            exit;
+            $result = $this->repository->update($id, $data);
+            if($result) 
+            {
+                $_SESSION['success'] = "Music Updated Succesfully";
+                header("Location: /musics");
+                exit;
+            } else {
+                $_SESSION['error'] = "Music Couldn't be Updated";
+                header("Location: /edit/music?music_id=".$id);
+                exit;
+            }
         } else {
             if($_SESSION['role'] != 'artist')
             {
-                header("Location: /", true, 403);
+                $_SESSION['error'] = "Unauthorized.";
+                header("Location: /");
             }
             $music = $this->repository->findBy(['id' => $id])[0];
             $artists = (new Artist())->all();
@@ -97,14 +116,21 @@ class MusicController
     {
         if($_SESSION['role'] != 'artist')
         {
-            header("Location: /", true, 403);
+            $_SESSION['error'] = "Unauthorized.";
+            header("Location: /");
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            file_put_contents('log.txt', print_r($_POST, true), FILE_APPEND);
-            $this->repository->delete($_POST['music_id']);
-            $_SESSION['success'] = "Music deleted succesfully";
-            header("Location: /musics");
-            exit;
+            $result = $this->repository->delete($_POST['music_id']);
+            if($result) {
+
+                $_SESSION['success'] = "Music deleted succesfully";
+                header("Location: /musics");
+                exit;
+            } else {
+                $_SESSION['error'] = "Music couldn't be deleted";
+                header("Location: /musics");
+                exit;
+            }
         }
     }
 }

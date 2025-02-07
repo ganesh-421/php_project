@@ -43,8 +43,6 @@ class AuthRepository extends BaseRepository
             ];
 
             $this->create($data);
-            $_SESSION['success'] = "Succesfully registered";
-            unset($_SESSION['error']);
             return true;
         } catch(Exception $e)
         {
@@ -82,7 +80,6 @@ class AuthRepository extends BaseRepository
             ];
             $this->update($id, $data);
             $_SESSION['success'] = "User Succesfully Updated";
-            unset($_SESSION['error']);
             return true;
         } catch(Exception $e) {
             $_SESSION['error'] = $e->getMessage();

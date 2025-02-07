@@ -38,9 +38,15 @@ class AuthController
     public function register()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->repository->register($_POST);
-            header("Location: /login");
-            exit;
+            $result = $this->repository->register($_POST);
+            if($result) {
+                $_SESSION['success'] = "Succesfully registered";
+                header("Location: /login");
+                exit;
+            } else {
+                header("Location: /register");
+                exit;
+            }
         } else {
             if($_SESSION['user_id'])
             {
