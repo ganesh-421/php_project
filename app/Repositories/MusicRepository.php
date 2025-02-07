@@ -45,4 +45,14 @@ class MusicRepository extends BaseRepository
     {
         return $this->model->all();
     }
+
+    /**
+     * paginated records
+     * @param int|null $page
+     * @param int|null $per_page 
+     */
+    public function paginated(?int $page, ?int $per_page)
+    {
+        return $this->model->paginate($page, $per_page);
+    }
 }
