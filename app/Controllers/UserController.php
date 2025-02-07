@@ -26,7 +26,8 @@ class UserController
 
     public function index()
     {
-        $users = $this->repository->getAll();
+        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+        $users = $this->repository->paginated($page, 5);
         require_once __DIR__ . '/../Views/auth/user/index.php';
     }
 

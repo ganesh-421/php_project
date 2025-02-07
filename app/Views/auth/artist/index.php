@@ -52,6 +52,7 @@
                     <?php } ?>
                 </tbody>
             </table>
+            <!-- Pagination -->
             <div class="flex space-x-1 mt-1 items-center justify-end">
                 <small class="text-gray-500 hover:text-gray-600">
                     <?= "Showing from " . $artists['from'] . " to " . $artists['to'] . " out of " . $artists['total'] . " records" ?>
