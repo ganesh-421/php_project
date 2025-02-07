@@ -119,4 +119,12 @@ class AuthRepository extends BaseRepository
             'email' => $email
         ])[0];
     }
+
+    /**
+     * fetch all user from database
+     */
+    public function getAll()
+    {
+        return $this->model->all();
+    }
 }
