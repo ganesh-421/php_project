@@ -1,6 +1,21 @@
 <?php require_once __DIR__ . '/../../layout/auth/header.php'; ?>
+    <nav aria-label="breadcrumb" class="w-full mb-3">
+        <ol class="flex w-full flex-wrap items-center rounded-md bg-slate-50 px-4 py-2">
+            <li class="flex cursor-pointer items-center text-sm text-slate-500 transition-colors duration-300 hover:text-slate-800">
+                <a href="/dashboard">Dashboard</a>
+                <span class="pointer-events-none mx-2 text-slate-800">
+                    /
+                </span>
+            </li>
+            <li class="flex cursor-pointer items-center text-sm text-slate-500 transition-colors duration-300 hover:text-slate-800">
+                <a href="/artists">Artists</a>
+                <span class="pointer-events-none mx-2 text-slate-800">
+                    /
+                </span>
+            </li>
+        </ol>
+    </nav>
     <!-- Main Content -->
-    <main class="flex-1 p-6">
         <div class="bg-white p-4 shadow rounded-lg">
             <div class="flex flex-col md:flex-row justify-between mb-4 space-y-2 md:space-y-0">
                 <input type="text" placeholder="Search..." class="border p-2 rounded-lg w-full md:w-auto">
@@ -94,13 +109,12 @@
                     </a>
                 <?php endif; ?>
 
-                <a href="?page=<?= ($page < $artists['totalPages']) ? $page + 1 : $artists['totalPages'] ?>" 
+                <a href="?page=<?= ($page < $artists['totalPages']) ? $page + 1 : (($artists['totalPages']>0) ? $artists['totalPages'] : 1 ) ?>" 
                 class="<?= ($page == $artists['totalPages']) ? "disabled " : '' ?> min-w-9 rounded-md border border-blue-300 py-2 px-3 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-blue-600 hover:border-blue-800 focus:text-white focus:bg-blue-600 focus:border-blue-800 active:border-blue-800 active:text-white active:bg-blue-600 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2">
                     Next
                 </a>
             </div>
         </div>
-    </main>
     <!-- Delete Confirmation Modal -->
     <div id="delete-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center" onclick="closeDeleteModal()">
         <div class="bg-white p-6 rounded-lg shadow-lg transform scale-95 transition-transform" onclick="event.stopPropagation()">

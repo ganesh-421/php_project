@@ -12,13 +12,15 @@ class UserController
     {
         if(!$_SESSION['user_id'])
         {
+            $_SESSION['error'] = "Session Expired";
             header("Location: /login");
             exit;
         }
 
         if($_SESSION['role'] !== 'super_admin')
         {
-            header("Location: /", true, 403);
+            $_SESSION['error'] = "Unauthorized.";
+            header("Location: /");
             exit;
         }
         $this->repository = new AuthRepository();
@@ -34,9 +36,29 @@ class UserController
     public function create()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->repository->register($_POST);
-            header("Location: /users");
-            exit;
+            $data = [
+                "first_name" => $_POST['first_name'],
+                "last_name" => $_POST['last_name'],
+                "email" => $_POST['email'],
+                "password" => password_hash($_POST['password'], PASSWORD_DEFAULT),
+                "phone" => $_POST['phone'],
+                "dob" => $_POST['dob'],
+                "gender" => $_POST['gender'],
+                "address" => $_POST['address'],
+                "role" => $_POST['role'],
+                "created_at" => date('Y-m-d H:i:s'),
+                "updated_at" => date('Y-m-d H:i:s'),
+            ];
+            $result = $this->repository->register($data);
+            if($result) {
+                $_SESSION['success'] = "User Created Succesfully";
+                header("Location: /users");
+                exit;
+            } else {
+                // $_SESSION['error'] = "User Couldn't be Created";
+                header("Location: /create/user");
+                exit;
+            }
         } else {
             require_once __DIR__ . '/../Views/auth/user/create.php';
         }
@@ -46,14 +68,27 @@ class UserController
     {
         $id = $_REQUEST['user_id'];
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            unset($_POST['user_id']);
-            $result = $this->repository->edit($id, $_POST);
+            $data = [
+                "first_name" => $_POST['first_name'],
+                "last_name" => $_POST['last_name'],
+                "email" => $_POST['email'],
+                "password" => password_hash($_POST['password'], PASSWORD_DEFAULT),
+                "phone" => $_POST['phone'],
+                "dob" => $_POST['dob'],
+                "gender" => $_POST['gender'],
+                "address" => $_POST['address'],
+                "role" => $_POST['role'],
+                "updated_at" => date('Y-m-d H:i:s'),
+            ];
+            $result = $this->repository->edit($id, $data);
             if($result)
             {
+                $_SESSION['success'] = "User Updated Succesfully";
                 header("Location: /users");
                 exit;
             } else {
-                header("Location: /update/user");
+                // $_SESSION['error'] = "User Couldn't be Updated";
+                header("Location: /update/user?user_id=".$id);
                 exit;
             }
         } else {
@@ -65,10 +100,16 @@ class UserController
     public function delete()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->repository->delete($_POST['user_id']);
-            $_SESSION['success'] = "User deleted succesfully";
-            header("Location: /users");
-            exit;
+            $result = $this->repository->delete($_POST['user_id']);
+            if($result) {
+                $_SESSION['success'] = "User deleted succesfully";
+                header("Location: /users");
+                exit;
+            } else {
+                $_SESSION['error'] = "User Couldn't be Deleted";
+                header("Location: /users");
+                exit;
+            }
         }
     }
 }

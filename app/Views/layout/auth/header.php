@@ -31,6 +31,12 @@
         <aside class="w-64 bg-gray-900 text-white min-h-screen p-4 hidden md:block transition-all duration-300 ease-in-out" id="sidebar">
             <nav>
                 <ul>
+                    
+                    <li>
+                        <a href="/dashboard" class="block p-2 hover:bg-gray-700 <?= str_contains($_SERVER['REQUEST_URI'], '/dashboard') ? "bg-gray-700" : ""  ?>">
+                        <i class="ph ph-package text-lg mr-2"></i>Dashboard
+                        </a>
+                    </li>
                     <?php if($_SESSION['role'] === 'super_admin') { ?>
                         <li class="mb-2">
                             <button class="w-full text-left p-2 hover:bg-gray-700 flex items-center dropdown-btn">
@@ -73,5 +79,18 @@
             </nav>
         </aside>
         <main class="flex-1 p-6">
+            <div class="w-96 absolute bottom-0 right-2">
+                <?php if($_SESSION['error']) { ?>
+                    <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+                        <span class="font-medium">Error!</span> <?php echo $_SESSION['error']; ?>
+                    </div>
+                <?php } unset($_SESSION['error']) ?>
+        
+                <?php if($_SESSION['success']) { ?>
+                    <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">
+                        <span class="font-medium">Success!</span> <?php echo $_SESSION['success']; ?>
+                    </div>
+                <?php } unset($_SESSION['success'])?>
+            </div>
 
             
