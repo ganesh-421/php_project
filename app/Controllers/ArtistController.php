@@ -18,7 +18,8 @@ class ArtistController
     }
     public function index()
     {
-        $artists = $this->repository->getAll();
+        $page = isset($_GET['page']) ? $_GET['page'] : 1;
+        $artists = $this->repository->paginated($page, 5);
         require_once __DIR__ . '/../Views/auth/artist/index.php';
     }
 
