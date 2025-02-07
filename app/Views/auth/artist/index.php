@@ -5,7 +5,11 @@
             <div class="flex flex-col md:flex-row justify-between mb-4 space-y-2 md:space-y-0">
                 <input type="text" placeholder="Search..." class="border p-2 rounded-lg w-full md:w-auto">
                 <?php if(($_SESSION['role'] === 'artist_manager')) { ?>
-                    <a href="/create/artist" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Create New</a>
+                    <div class="flex gap-5">
+                        <a href="/create/artist" class="bg-gray-600 text-white px-4 py-2 rounded-lg" title="Impoer From CSV File">Import</a>
+                        <a href="/create/artist" class="bg-green-600 text-white px-4 py-2 rounded-lg" title="Export To CSV">Export</a>
+                        <a href="/create/artist" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Create New</a>
+                    </div>
                 <?php } ?>
             </div>
             <table class="w-full border-collapse border border-gray-200">
@@ -21,7 +25,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach($artists as $key=>$artist) { ?>
+                    <?php foreach($artists['data'] as $key=>$artist) { ?>
                         <?php 
                             if($artist['gender'] === 'm')
                                 $gender = "Male";
@@ -48,6 +52,50 @@
                     <?php } ?>
                 </tbody>
             </table>
+            <div class="flex space-x-1 mt-1 items-center justify-end">
+                <small class="text-gray-500 hover:text-gray-600">
+                    <?= "Showing from " . $artists['from'] . " to " . $artists['to'] . " out of " . $artists['total'] . " records" ?>
+                </small>
+
+                <a href="?page=<?= ($page > 1) ? $page - 1 : 1 ?>" 
+                class="<?= ($page == 1) ? "disabled " : '' ?>rounded-md border border-blue-300 py-2 px-3 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-blue-600 hover:border-blue-800 focus:text-white focus:bg-blue-600 focus:border-blue-800 active:border-blue-800 active:text-white active:bg-blue-600 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2">
+                    Prev
+                </a>
+
+                <!-- First Page -->
+                <a href="?page=1" class="min-w-9 rounded-md <?= (1 == $page) ? 'bg-blue-600 text-white' : '' ?> py-2 px-3 border border-transparent text-center text-sm transition-all shadow-md hover:shadow-lg focus:bg-blue-500 hover:bg-blue-500 active:bg-blue-500 hover:text-white ml-2">
+                    1
+                </a>
+
+                <?php if ($page > 3): ?>
+                    <span class="text-gray-500 px-2">...</span>
+                <?php endif; ?>
+
+                <?php 
+                $start = max(2, $page - 1);
+                $end = min($artists['totalPages'] - 1, $page + 1);
+
+                for ($i = $start; $i <= $end; $i++): ?>
+                    <a href="?page=<?= $i ?>" class="min-w-9 rounded-md <?= ($i == $page) ? 'bg-blue-600 text-white' : '' ?> py-2 px-3 border border-transparent text-center text-sm transition-all shadow-md hover:shadow-lg focus:bg-blue-500 hover:bg-blue-500 active:bg-blue-500 hover:text-white ml-2">
+                        <?= $i ?>
+                    </a>
+                <?php endfor; ?>
+
+                <?php if ($page < $artists['totalPages'] - 2): ?>
+                    <span class="text-gray-500 px-2">...</span>
+                <?php endif; ?>
+
+                <?php if ($artists['totalPages'] > 1): ?>
+                    <a href="?page=<?= $artists['totalPages'] ?>" class="min-w-9 rounded-md <?= ($artists['totalPages'] == $page) ? 'bg-blue-600 text-white' : '' ?> py-2 px-3 border border-transparent text-center text-sm transition-all shadow-md hover:shadow-lg focus:bg-blue-500 hover:bg-blue-500 active:bg-blue-500 hover:text-white ml-2">
+                        <?= $artists['totalPages'] ?>
+                    </a>
+                <?php endif; ?>
+
+                <a href="?page=<?= ($page < $artists['totalPages']) ? $page + 1 : $artists['totalPages'] ?>" 
+                class="<?= ($page == $artists['totalPages']) ? "disabled " : '' ?> min-w-9 rounded-md border border-blue-300 py-2 px-3 text-center text-sm transition-all shadow-sm hover:shadow-lg text-slate-600 hover:text-white hover:bg-blue-600 hover:border-blue-800 focus:text-white focus:bg-blue-600 focus:border-blue-800 active:border-blue-800 active:text-white active:bg-blue-600 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2">
+                    Next
+                </a>
+            </div>
         </div>
     </main>
     <!-- Delete Confirmation Modal -->

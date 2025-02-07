@@ -34,7 +34,7 @@
                     <?php if($_SESSION['role'] === 'super_admin') { ?>
                         <li class="mb-2">
                             <button class="w-full text-left p-2 hover:bg-gray-700 flex items-center dropdown-btn">
-                                <i class="ph ph-microphone text-lg mr-2"></i> Users
+                                <i class="ph ph-users text-lg mr-2"></i> Users
                                 <i class="ph ph-caret-down ml-auto transition-transform rotate-180"></i>
                             </button>
                             <ul class="space-y-1 pl-4 dropdown-menu transition-all duration-300 ease-in-out origin-top scale-y-100">
