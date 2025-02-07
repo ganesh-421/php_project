@@ -1,7 +1,7 @@
 <?php require_once __DIR__ . '/../../layout/auth/header.php'; ?>
     <!-- Main Content -->
     <div class="bg-white p-4 shadow rounded-lg">
-        <form class="space-y-4 p-4 border rounded-lg max-w-lg mx-auto" action="/register" method="POST">
+        <form class="space-y-4 p-4 border rounded-lg max-w-lg mx-auto" action="/create/user" method="POST">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <!-- First Name -->
                 <div>
