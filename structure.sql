@@ -55,13 +55,15 @@ DROP TABLE IF EXISTS `music`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `music` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `artist` int(11) NOT NULL,
+  `artist_id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
   `album_name` varchar(255) NOT NULL,
   `genre` enum('rnb','country','classic','rock','jazz') DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `artist_id` (`artist_id`),
+  CONSTRAINT `music_ibfk_1` FOREIGN KEY (`artist_id`) REFERENCES `artist` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -95,7 +97,7 @@ CREATE TABLE `user` (
   `updated_at` datetime DEFAULT NULL,
   `role` enum('super_admin','artist_manager','artist') DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -104,8 +106,6 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES
-(1,'Ganesh','Adhikari','superadmin@example.com','$2y$10$7F6q.kzaLYrh35AhOjXFveSMVgewY63o9389noZBXVhojJ.1iPgxO','9864434149','2025-02-05 00:00:00','m','Kathmandu, Sankhamul','2025-02-05 12:36:49','2025-02-05 12:36:49','super_admin');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -118,4 +118,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2025-02-06  9:48:29
+-- Dump completed on 2025-02-07 19:14:15
