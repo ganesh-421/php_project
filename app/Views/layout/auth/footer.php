@@ -7,9 +7,9 @@
             menu.classList.toggle('opacity-100');
         });
 
-        function showDeleteModal(artist_id) {
+        function showDeleteModal(elementId, id) {
             document.getElementById('delete-modal').classList.remove('hidden');
-            document.getElementById('artist_id').value = artist_id;
+            document.getElementById(elementId).value = id;
         }
         function closeDeleteModal() {
             document.getElementById('delete-modal').classList.add('hidden');
