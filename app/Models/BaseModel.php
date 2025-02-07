@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Core\Database;
+use PDO;
 
 class BaseModel
 {
@@ -85,6 +86,37 @@ class BaseModel
         $stmt->execute();
         return $stmt->fetchAll();
       }
+    
+    /**
+     * fetch data in paginated format
+     * @param int current page
+     * @param int limit per page
+     */
+    public function paginate($page = 1, $limit = 10)
+    {
+        $offset = ($page - 1) * $limit;
+
+        $totalQuery = "SELECT COUNT(*) AS total FROM " . $this->table;
+        $totalStmt = $this->db->prepare($totalQuery);
+        $totalStmt->execute();
+        $totalRecords = $totalStmt->fetch()['total'];
+        $totalPages = ceil($totalRecords / $limit);
+
+        $query = "SELECT * FROM " . $this->table . " ORDER BY id DESC LIMIT :limit OFFSET :offset";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        $records = $stmt->fetchAll();
+        $response = [
+            'data' => $records,
+            'total' => $totalRecords,
+            'totalPages' => $totalPages,
+            'from' => $offset + 1,
+            'to' => $offset + count($records)
+        ];
+        return $response;
+    }
 
     /**
      * delete data 
