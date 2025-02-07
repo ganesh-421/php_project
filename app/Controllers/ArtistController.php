@@ -59,4 +59,25 @@ class ArtistController
             exit;
         }
     }
+
+    public function exportCsv()
+    {
+        $filename = "artists.csv";
+        $this->repository->export($filename);
+        $file = "exports/" . $filename;
+
+        
+        if (!file_exists($file)) {
+            $_SESSION['error'] = "Failed to export records.";
+            return;
+        }
+
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="' . basename($file) . '"');
+        header('Content-Length: ' . filesize($file));
+        
+        readfile($file);
+        $_SESSION['success'] = "All Records Exported";
+        exit();
+    }
 }

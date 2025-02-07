@@ -7,7 +7,9 @@
                 <?php if(($_SESSION['role'] === 'artist_manager')) { ?>
                     <div class="flex gap-5">
                         <a href="/create/artist" class="bg-gray-600 text-white px-4 py-2 rounded-lg" title="Impoer From CSV File">Import</a>
-                        <a href="/create/artist" class="bg-green-600 text-white px-4 py-2 rounded-lg" title="Export To CSV">Export</a>
+                        <form action="/export/artist" method="POST">
+                            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded-lg" title="Export To CSV">Export</button>
+                        </form>
                         <a href="/create/artist" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Create New</a>
                     </div>
                 <?php } ?>
@@ -42,7 +44,7 @@
                             <td class="border p-2"><?= $artist['first_release_year']  ?></td>
                             <td class="border p-2"><?= $artist['no_of_albums_released']  ?></td>
                             <td class="border p-2 flex space-x-2">
-                                <a href="/songs/artist?artist_id=<?= $artist['id'] ?>" class="text-blue-600 flex items-center"><i class="ph ph-pencil-line mr-1"></i> Songs</a>
+                                <a href="/musics?artist_id=<?= $artist['id'] ?>" class="text-green-600 flex items-center"><i class="ph ph-music-notes mr-1"></i> Songs</a>
                                 <?php if(($_SESSION['role'] === 'artist_manager')) { ?>
                                     <a href="/update/artist?artist_id=<?= $artist['id'] ?>" class="text-blue-600 flex items-center"><i class="ph ph-pencil-line mr-1"></i> Edit</a>
                                     <button onclick="showDeleteModal('artist_id', <?= $artist['id']  ?>)" class="text-red-600 flex items-center"><i class="ph ph-trash mr-1"></i> Delete</button>
