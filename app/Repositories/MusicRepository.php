@@ -20,14 +20,6 @@ class MusicRepository extends BaseRepository
     public function add($data)
     {
         try {
-            $data = [
-                "artist_id" => $data['artist_id'],
-                "title" => $data['title'],
-                "album_name" => $data['album_name'],
-                "genre" => $data['genre'],
-                "created_at" => date('Y-m-d H:i:s'),
-                "updated_at" => date('Y-m-d H:i:s'),
-            ];
             $this->create($data);
             $_SESSION['success'] = "Music Created Succesfully";
             return true;

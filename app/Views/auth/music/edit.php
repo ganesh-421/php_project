@@ -1,7 +1,7 @@
 <?php require_once __DIR__ . '/../../layout/auth/header.php'; ?>
     <!-- Main Content -->
     <div class="bg-white p-4 shadow rounded-lg">
-        <form action="/store/music" method="POST" class="space-y-4 p-4 border rounded-lg max-w-lg mx-auto">
+        <form action="/update/music" method="POST" class="space-y-4 p-4 border rounded-lg max-w-lg mx-auto">
             <div>
                 <label class="block text-sm font-medium">Artist</label>
                 <select name="artist_id" required class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400">
