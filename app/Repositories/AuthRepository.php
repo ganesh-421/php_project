@@ -26,7 +26,7 @@ class AuthRepository extends BaseRepository
                 $_SESSION['error'] = "Email already exists";
                 return false;
             }
-            $this->create($data);
+            $this->createRegistration($data);
             return true;
         } catch(Exception $e)
         {
@@ -101,5 +101,14 @@ class AuthRepository extends BaseRepository
     public function paginated(?int $page, ?int $per_page)
     {
         return $this->model->paginate($page, $per_page);
+    }
+
+    public function createRegistration(array $data)
+    {
+        if($data['password'] ?? false)
+        {
+            $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+        }
+        $this->create($data);
     }
 }

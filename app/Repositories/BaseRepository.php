@@ -74,5 +74,18 @@ class BaseRepository
             return false;
         }
     }
-   
+
+    /**
+     * find by id 
+     */
+    public function find($id)
+    {
+        try {
+            return $this->model->delete($id);
+        } catch(Exception $e)
+        {
+            $_SESSION['error'] = "Something Went Wrong";
+            return false;
+        }
+    }
 }

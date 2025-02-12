@@ -17,10 +17,23 @@ class BaseModel
      */
     protected $table;
 
+    /**
+     * @var String query string to execute
+     */
+    protected $query;
+
+     /**
+     * @var int id primary key
+     */
+    protected $id;
+
     public function __construct()
     {
         if(!$this->db)
             $this->db = Database::getConnection();
+        if(!self::$id)
+            self::$id = 1; 
+        self::$id = (int) self::$id;
     }
 
     /**
@@ -164,5 +177,17 @@ class BaseModel
         $stmt = $this->db->prepare($query);
         $stmt->execute();
         return $stmt->fetch()['count'];
+    }
+
+    /**
+     * return value by id from database
+     */
+    public function find($id = null)
+    {
+        if($id ?? false)
+        {
+            $this->id = $id;
+            return Database::find();
+        }
     }
 }
