@@ -12,6 +12,11 @@ class AuthMiddleware
      */
     private $repository;
 
+    /**
+     * @var string redirect to
+     */
+    protected $redirectTo;
+
     public function __construct()
     {
         $this->repository = new AuthRepository();
@@ -22,6 +27,9 @@ class AuthMiddleware
      */
     public function auth()
     {
-        
+        if(count($this->repository->model->find($_SESSION['id'])))
+        {
+            header("Locations: " . static::$redirectTo);
+        }
     }
 }

@@ -10,7 +10,8 @@ Router::get('/register', 'AuthController@register');
 Router::post('/register', 'AuthController@register');
 Router::post('/logout', 'AuthController@logout');
 
-Router::get('/dashboard', 'PageController@dashboard');
+
+Router::get('/dashboard', 'PageController@dashboard')->middleware('auth');
 
 // artists
 Router::get('/artists', 'ArtistController@index');
