@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Session;
 use App\Models\User;
 use Exception;
 
@@ -65,9 +66,10 @@ class AuthRepository extends BaseRepository
     {
         $user = $this->findByEmail($email);
         if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user_name'] = $user['first_name'] . " " . $user['last_name'];
-            $_SESSION['role'] = $user['role'];
+            $columns = ['user_id', 'token'];
+            $_SESSION['token'] = hash('sha256', time());
+            $data=  [$user['id'], $_SESSION['token']];
+            (new Session())->create($columns, $data);
             return true;
         }
         return false;

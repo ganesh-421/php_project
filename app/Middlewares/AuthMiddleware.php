@@ -2,6 +2,7 @@
 
 namespace App\Middlewares;
 
+use App\Models\Session;
 use App\Repositories\AuthRepository;
 
 class AuthMiddleware
@@ -10,7 +11,7 @@ class AuthMiddleware
     /**
      * @var private repository
      */
-    private $repository;
+    // private $repository;
 
     /**
      * @var string redirect to
@@ -19,7 +20,7 @@ class AuthMiddleware
 
     public function __construct()
     {
-        $this->repository = new AuthRepository();
+        // $this->repository = new AuthRepository();
     }
 
     /**
@@ -27,7 +28,8 @@ class AuthMiddleware
      */
     public function handle()
     {
-        if(empty($this->repository->model->find($_SESSION['user_id']) ?? []))
+        $session = new Session();
+        if(empty($session->auth()))
         {
             if($_SERVER['REQUEST_URI'] !== self::$redirectTo)
             {

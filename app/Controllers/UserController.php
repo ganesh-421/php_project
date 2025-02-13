@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\Session;
 use App\Repositories\AuthRepository;
 
 class UserController
@@ -10,14 +11,7 @@ class UserController
 
     public function __construct()
     {
-        if(!$_SESSION['user_id'])
-        {
-            $_SESSION['error'] = "Session Expired";
-            header("Location: /login");
-            exit;
-        }
-
-        if($_SESSION['role'] !== 'super_admin')
+        if((new Session)->role() !== 'super_admin')
         {
             $_SESSION['error'] = "Unauthorized.";
             header("Location: /");

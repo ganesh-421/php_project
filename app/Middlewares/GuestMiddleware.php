@@ -2,6 +2,7 @@
 
 namespace App\Middlewares;
 
+use App\Models\Session;
 use App\Repositories\AuthRepository;
 
 class GuestMiddleware
@@ -27,7 +28,8 @@ class GuestMiddleware
      */
     public function handle()
     {
-        if(!empty($this->repository->model->find($_SESSION['user_id']) ?? []))
+        var_dump(empty((new Session())->auth()));
+        if(!empty((new Session())->auth()))
         {
             header("Location: " . self::$redirectTo);
             exit;

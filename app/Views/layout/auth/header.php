@@ -10,11 +10,11 @@
 <body class="bg-gray-100">
     <!-- Top Navigation Bar -->
     <nav class="bg-white shadow-md p-4 flex justify-between items-center fixed top-0 w-full z-50">
-        <span class="text-xl font-bold"><?= $_SESSION['role'] ?></span>
+        <span class="text-xl font-bold"><?= (new App\Models\Session())->role() ?></span>
         <div class="relative">
             <button id="user-menu-btn" class="flex items-center space-x-2 focus:outline-none">
                 <img src="https://i.pravatar.cc/40" class="w-8 h-8 rounded-full">
-                <span class="text-gray-700"><?php echo $_SESSION['user_name'] ?></span>
+                <span class="text-gray-700"><?php echo (new App\Models\Session())->name() ?></span>
             </button>
             <div id="user-menu" class="hidden absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg overflow-hidden transition-opacity opacity-0">
                 <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">View Profile</a>

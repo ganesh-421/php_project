@@ -9,5 +9,4 @@ class User extends BaseModel
         parent::__construct();
         $this->table = "user";
     }
-    
 }
