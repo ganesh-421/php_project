@@ -4,7 +4,7 @@ namespace App\Middlewares;
 
 use App\Repositories\AuthRepository;
 
-class AuthMiddleware
+class GuestMiddleware
 {
    
     /**
@@ -15,7 +15,7 @@ class AuthMiddleware
     /**
      * @var string redirect to
      */
-    protected static $redirectTo =  '/login';
+    protected static $redirectTo =  '/dashboard';
 
     public function __construct()
     {
@@ -23,11 +23,11 @@ class AuthMiddleware
     }
 
     /**
-     * redirects if unauthenticated
+     * redirects if authenticated
      */
-    public function auth()
+    public function guest()
     {
-        if(empty($this->repository->model->find($_SESSION['user_id']) ?? []))
+        if(!empty($this->repository->model->find($_SESSION['user_id']) ?? []))
         {
             if($_SERVER['REQUEST_URI'] !== self::$redirectTo)
             {

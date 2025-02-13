@@ -4,11 +4,11 @@ use App\Core\Router;
 
 Router::get('/', 'PageController@landing');
 
-Router::get('/login', 'AuthController@login');
-Router::post('/login', 'AuthController@login');
-Router::get('/register', 'AuthController@register');
-Router::post('/register', 'AuthController@register');
-Router::post('/logout', 'AuthController@logout');
+Router::get('/login', 'AuthController@login', 'guest');
+Router::post('/login', 'AuthController@login', 'guest');
+Router::get('/register', 'AuthController@register', 'guest');
+Router::post('/register', 'AuthController@register', 'guest');
+Router::post('/logout', 'AuthController@logout', 'auth');
 
 Router::get('/dashboard', 'PageController@dashboard', 'auth');
 
