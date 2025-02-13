@@ -93,7 +93,12 @@ class UserController
 
     public function delete()
     {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if((new Session())->auth()['id'] == $_POST['user_id']) {
+                $_SESSION['error'] = "Users Shouldn't delete themselves";
+                header("Location: /users");
+                exit;
+            }
             $result = $this->repository->delete($_POST['user_id']);
             if($result) {
                 $_SESSION['success'] = "User deleted succesfully";

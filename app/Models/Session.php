@@ -23,7 +23,7 @@ class Session extends BaseModel
     public function auth()
     {
         $token = $_SESSION['token'];
-        $query = "SELECT * FROM `user` INNER JOIN `session` ON `user`.`id` = `session`.`user_id` WHERE `session`.`token`=?";
+        $query = "SELECT `user`.* FROM `user` INNER JOIN `session` ON `user`.`id` = `session`.`user_id` WHERE `session`.`token`=?";
         $stmt = $this->db->prepare($query);
         $stmt->execute([$token]);
         return $stmt->fetch();
