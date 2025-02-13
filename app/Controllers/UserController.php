@@ -100,6 +100,7 @@ class UserController
     public function delete()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if($_SESSION['user'] )
             $result = $this->repository->delete($_POST['user_id']);
             if($result) {
                 $_SESSION['success'] = "User deleted succesfully";

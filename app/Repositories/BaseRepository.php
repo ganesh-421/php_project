@@ -10,7 +10,7 @@ class BaseRepository
     /**
      * @var Model model instance [database connection instance]
      */
-    protected $model;
+    public $model;
 
     public function create(array $data)
     {
