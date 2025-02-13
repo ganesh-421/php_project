@@ -7,10 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
+<?php $role = (new App\Models\Session())->role(); ?>
 <body class="bg-gray-100">
     <!-- Top Navigation Bar -->
     <nav class="bg-white shadow-md p-4 flex justify-between items-center fixed top-0 w-full z-50">
-        <span class="text-xl font-bold"><?= (new App\Models\Session())->role() ?></span>
+        <span class="text-xl font-bold"><?= $role ?></span>
         <div class="relative">
             <button id="user-menu-btn" class="flex items-center space-x-2 focus:outline-none">
                 <img src="https://i.pravatar.cc/40" class="w-8 h-8 rounded-full">
@@ -37,7 +38,7 @@
                         <i class="ph ph-package text-lg mr-2"></i>Dashboard
                         </a>
                     </li>
-                    <?php if($_SESSION['role'] === 'super_admin') { ?>
+                    <?php if($role === 'super_admin') { ?>
                         <li class="mb-2">
                             <button class="w-full text-left p-2 hover:bg-gray-700 flex items-center dropdown-btn">
                                 <i class="ph ph-users text-lg mr-2"></i> Users
@@ -49,7 +50,7 @@
                             </ul>
                         </li>
                     <?php } ?>
-                    <?php if(($_SESSION['role'] === 'super_admin') || ($_SESSION['role'] === 'artist_manager')) { ?>
+                    <?php if(($role === 'super_admin') || ($role === 'artist_manager')) { ?>
                         <li class="mb-2">
                             <button class="w-full text-left p-2 hover:bg-gray-700 flex items-center dropdown-btn">
                                 <i class="ph ph-microphone text-lg mr-2"></i> Artists
@@ -57,7 +58,7 @@
                             </button>
                             <ul class="space-y-1 pl-4 dropdown-menu transition-all duration-300 ease-in-out origin-top scale-y-100">
                                 <li><a href="/artists" class="block p-2 hover:bg-gray-700 <?= str_contains($_SERVER['REQUEST_URI'], '/artists') ? "bg-gray-700" : ""  ?>">Artist List</a></li>
-                                <?php if(($_SESSION['role'] === 'artist_manager')) { ?>
+                                <?php if(($role === 'artist_manager')) { ?>
                                     <li><a href="/create/artist" class="block p-2 hover:bg-gray-700 <?= str_contains($_SERVER['REQUEST_URI'], '/create/artist') ? "bg-gray-700" : ""  ?>">Add Artist</a></li>
                                 <?php } ?>
                             </ul>
@@ -70,7 +71,7 @@
                         </button>
                         <ul class="space-y-1 pl-4 dropdown-menu transition-all duration-300 ease-in-out origin-top scale-y-100">
                             <li><a href="/musics" class="block p-2 hover:bg-gray-700 <?= str_contains($_SERVER['REQUEST_URI'], '/musics') ? "bg-gray-700" : ""  ?>">Music List</a></li>
-                            <?php if(($_SESSION['role'] === 'artist')) { ?>
+                            <?php if(($role === 'artist')) { ?>
                                 <li><a href="/create/music" class="block p-2 hover:bg-gray-700 <?= str_contains($_SERVER['REQUEST_URI'], '/create/music') ? "bg-gray-700" : ""  ?>">Add Music</a></li>
                             <?php } ?>
                         </ul>

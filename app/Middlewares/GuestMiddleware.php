@@ -28,7 +28,6 @@ class GuestMiddleware
      */
     public function handle()
     {
-        var_dump(empty((new Session())->auth()));
         if(!empty((new Session())->auth()))
         {
             header("Location: " . self::$redirectTo);

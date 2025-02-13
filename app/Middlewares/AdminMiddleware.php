@@ -29,7 +29,6 @@ class AuthMiddleware
     {
         if(count($this->repository->model->find($_SESSION['id']) ?? []));
         {
-            var_dump(static::$redirectTo);
             session_destroy();
         }
     }

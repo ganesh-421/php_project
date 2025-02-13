@@ -10,12 +10,6 @@ class ArtistController
     private $repository;
     public function __construct()
     {
-        if(!$_SESSION['user_id'])
-        {
-            $_SESSION['error'] = "Session Expired";
-            header("Location: /login");
-            exit;
-        }
         if(!(((new Session())->role() != 'artist_manager') || ((new Session())->role() != 'super_admin')))
         {
             $_SESSION['error'] = "Unauthorized.";
