@@ -25,14 +25,13 @@ class GuestMiddleware
     /**
      * redirects if authenticated
      */
-    public function guest()
+    public function handle()
     {
         if(!empty($this->repository->model->find($_SESSION['user_id']) ?? []))
         {
-            if($_SERVER['REQUEST_URI'] !== self::$redirectTo)
-            {
-                header("Location: " . self::$redirectTo);
-            }
+            header("Location: " . self::$redirectTo);
+            exit;
         }
+        return true;
     }
 }
