@@ -113,4 +113,11 @@ class AuthRepository extends BaseRepository
         }
         $this->create($data);
     }
+
+    public function logout()
+    {
+        $current = (new Session())->current();
+        (new Session)->delete($current['id']);
+        session_destroy();
+    }
 }

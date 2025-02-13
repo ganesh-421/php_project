@@ -49,7 +49,8 @@ class AuthController
 
     public function logout()
     {
-        session_destroy();
+        
+        $this->repository->logout($_POST['email'], $_POST['password']);
         header("Location: /login");
     }
 }

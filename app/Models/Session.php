@@ -11,6 +11,15 @@ class Session extends BaseModel
         $this->table = "session";
     }
 
+    public function current()
+    {
+        $token = $_SESSION['token'];
+        $query = "SELECT * FROM `session` WHERE `session`.`token`=?";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$token]);
+        return $stmt->fetch();
+    }
+
     public function auth()
     {
         $token = $_SESSION['token'];
