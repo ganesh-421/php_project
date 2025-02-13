@@ -10,4 +10,20 @@ class Music extends BaseModel
         parent::__construct();
         $this->table = "music";
     }
+
+    public function user($id)
+    {
+        $query = "SELECT `user`.`*`, `music`.`id` FROM `music` 
+                INNER JOIN `artist`
+                ON `music`.`artist_id` = `artist`.`id` 
+                INNER JOIN `user`
+                ON `artist`.`user_id` =  `user`.`id`
+                WHERE `music`.`id`=?";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute([$id]);
+        $user = $stmt->fetch();
+
+        return $user;
+    }
 }

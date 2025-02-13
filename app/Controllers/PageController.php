@@ -11,6 +11,12 @@ class PageController
 {
     public function landing()
     {
+        if(!(new Session)->auth())
+        {
+            header("Location: /login");
+        } else {
+            header("Location: /dashboard");
+        }
     }
 
     public function dashboard()

@@ -1,4 +1,7 @@
 <?php require_once __DIR__ . '/../../layout/auth/header.php'; ?>
+    <?php 
+        $auth = (new  \App\Models\Session())->auth();
+    ?>
     <nav aria-label="breadcrumb" class="w-full mb-3">
         <ol class="flex w-full flex-wrap items-center rounded-md bg-slate-50 px-4 py-2">
             <li class="flex cursor-pointer items-center text-sm text-slate-500 transition-colors duration-300 hover:text-slate-800">
@@ -40,11 +43,15 @@
                 <?php foreach($musics as $key=>$music) { ?>
                     <tr>
                         <td class="border p-2"><?= $music['title']  ?></td>
-                        <td class="border p-2"><?= (new \App\Models\Artist())->findBy('id', $music['artist_id'])[0]['name']  ?></td>
+                        <td class="border p-2">
+                            <?php $artist = (new \App\Models\Artist())->findBy('id', $music['artist_id'])[0]  ?>
+                            <?= $artist['name'] ?>
+                            <?=($auth['id'] == $artist['user_id']) ?  "(Its You)" : "" ?>
+                        </td>
                         <td class="border p-2"><?= $music['album_name']  ?></td>
                         <td class="border p-2"><?= $music['genre']  ?></td>
                         <td class="border p-2 flex space-x-2">
-                            <?php if(($_SESSION['role'] === 'artist')) { ?>
+                            <?php if(($auth['role'] === 'artist') && $auth['id'] == $artist['user_id']) { ?>
                                 <a href="/update/music?music_id=<?= $music['id'] ?>" class="text-blue-600 flex items-center"><i class="ph ph-pencil-line mr-1"></i> Edit</a>
                                 <button onclick="showDeleteModal('music_id', <?= $music['id']  ?>)" class="text-red-600 flex items-center"><i class="ph ph-trash mr-1"></i> Delete</button>
                             <?php } ?>
