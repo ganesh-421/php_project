@@ -21,7 +21,8 @@ class BaseRepository
            return $this->model->create($cols, $vals);
         } catch(Exception $e)
         {
-            $_SESSION['error'] = "Something Went Wrong";
+            // $_SESSION['error'] = "Something Went Wrong";
+            $_SESSION['error'] = $e->getMessage();
             return false;
         }
     }
