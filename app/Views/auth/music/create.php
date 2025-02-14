@@ -27,9 +27,7 @@
                 <label class="block text-sm font-medium">Artist</label>
                 <select name="artist_id" required class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400">
                     <option value="">Select an Artist</option>
-                    <?php foreach ($artists as $artist) { ?>
-                        <option value="<?= $artist['id'] ?>" <?= (isset($_GET['artist_id'])) ? (($artist['id'] == $_GET['artist_id']) ? 'selected' : '' ) : "" ?>><?= htmlspecialchars($artist['name']) ?></option>
-                    <?php } ?>
+                    <option <?= $artist['user_id'] == ($authUser['id']) ? "selected" : "" ?> value="<?= $artist['id'] ?>" <?= (isset($_GET['artist_id'])) ? (($artist['id'] == $_GET['artist_id']) ? 'selected' : '' ) : "" ?>><?= htmlspecialchars($artist['name']) ?></option>
                 </select>
             </div>
 

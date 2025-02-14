@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\Session;
 use App\Repositories\AuthRepository;
 
 class UserController
@@ -10,14 +11,7 @@ class UserController
 
     public function __construct()
     {
-        if(!$_SESSION['user_id'])
-        {
-            $_SESSION['error'] = "Session Expired";
-            header("Location: /login");
-            exit;
-        }
-
-        if($_SESSION['role'] !== 'super_admin')
+        if((new Session)->role() !== 'super_admin')
         {
             $_SESSION['error'] = "Unauthorized.";
             header("Location: /");
@@ -40,7 +34,7 @@ class UserController
                 "first_name" => $_POST['first_name'],
                 "last_name" => $_POST['last_name'],
                 "email" => $_POST['email'],
-                "password" => password_hash($_POST['password'], PASSWORD_DEFAULT),
+                "password" => $_POST['password'],
                 "phone" => $_POST['phone'],
                 "dob" => $_POST['dob'],
                 "gender" => $_POST['gender'],
@@ -100,6 +94,11 @@ class UserController
     public function delete()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if((new Session())->auth()['id'] == $_POST['user_id']) {
+                $_SESSION['error'] = "Users Shouldn't delete themselves";
+                header("Location: /users");
+                exit;
+            }
             $result = $this->repository->delete($_POST['user_id']);
             if($result) {
                 $_SESSION['success'] = "User deleted succesfully";

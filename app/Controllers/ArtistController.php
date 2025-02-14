@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\Session;
 use App\Repositories\ArtistRepository;
 
 class ArtistController
@@ -9,13 +10,7 @@ class ArtistController
     private $repository;
     public function __construct()
     {
-        if(!$_SESSION['user_id'])
-        {
-            $_SESSION['error'] = "Session Expired";
-            header("Location: /login");
-            exit;
-        }
-        if(!(($_SESSION['role'] != 'artist_manager') || ($_SESSION['role'] != 'super_admin')))
+        if(!(((new Session())->role() != 'artist_manager') || ((new Session())->role() != 'super_admin')))
         {
             $_SESSION['error'] = "Unauthorized.";
             header("Location: /");
@@ -31,7 +26,7 @@ class ArtistController
 
     public function create()
     {
-        if(($_SESSION['role'] != 'artist_manager'))
+        if(((new Session())->role() != 'artist_manager'))
         {
             $_SESSION['error'] = "Unauthorized.";
             header("Location: /");
@@ -44,7 +39,7 @@ class ArtistController
                 header("Location: /artists");
                 exit;
             } else {
-                $_SESSION['error'] = "Artist Couldn't be Added";
+                // $_SESSION['error'] = "Artist Couldn't be Added";
                 header("Location: /create/artist");
                 exit;
             }
@@ -55,7 +50,7 @@ class ArtistController
 
     public function edit()
     {
-        if(($_SESSION['role'] != 'artist_manager'))
+        if(((new Session())->role() != 'artist_manager'))
         {
             $_SESSION['error'] = "Unauthorized.";
             header("Location: /");

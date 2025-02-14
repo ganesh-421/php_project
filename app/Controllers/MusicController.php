@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\Artist;
+use App\Models\Music;
+use App\Models\Session;
 use App\Repositories\MusicRepository;
 
 class MusicController
@@ -10,12 +12,6 @@ class MusicController
     private $repository;
     public function __construct()
     {
-        if(!$_SESSION['user_id'])
-        {
-            $_SESSION['error'] = "Session Expired";
-            header("Location: /login");
-            exit;
-        }
         $this->repository = new MusicRepository();
     }
     public function index()
@@ -35,12 +31,14 @@ class MusicController
 
     public function create()
     {
-        if($_SESSION['role'] != 'artist')
-        {
-            $_SESSION['error'] = "Unauthorized.";
-            header("Location: /");
-        }
+        $authUser = (((new Session())->auth()));
+        $artist = (new Artist())->find($_REQUEST['artist_id']);
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if( $authUser['role'] != 'artist' || $authUser['id'] != $artist['user_id'])
+            {
+                $_SESSION['error'] = "Unauthorized.";
+                header("Location: /");
+            }
             $data = [
                 "artist_id" => $_REQUEST['artist_id'],
                 "title" => $_POST['title'],
@@ -61,11 +59,12 @@ class MusicController
                 exit;
             }
         } else {
-            if($_SESSION['role'] != 'artist')
+            if( $authUser['role'] != 'artist')
             {
-                header("Location: /", true, 403);
+                $_SESSION['error'] = "Unauthorized.";
+                header("Location: /");
             }
-            $artists = (new Artist())->all();
+            $artist = (new Artist())->findBy('user_id', $authUser['id'])[0];
             $genres = ['rnb', 'country', 'classic', 'rock', 'jazz'];
             require_once __DIR__ . '/../Views/auth/music/create.php';
         }
@@ -73,12 +72,16 @@ class MusicController
 
     public function edit()
     {
-        if($_SESSION['role'] != 'artist')
+        $id = $_REQUEST['music_id'];
+        $authUser = (new Session())->auth();
+        $music = (new Music())->find($id);
+        $artist = (new Artist())->find($music['artist_id']);
+
+        if($authUser['role'] != 'artist' || $authUser['id'] != $artist['user_id'])
         {
             $_SESSION['error'] = "Unauthorized.";
             header("Location: /");
-        }
-        $id = $_REQUEST['music_id'];
+        }                     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 "artist_id" => $_REQUEST['artist_id'],
@@ -99,7 +102,7 @@ class MusicController
                 exit;
             }
         } else {
-            if($_SESSION['role'] != 'artist')
+            if((new Session())->role() != 'artist')
             {
                 $_SESSION['error'] = "Unauthorized.";
                 header("Location: /");
@@ -113,7 +116,7 @@ class MusicController
 
     public function delete()
     {
-        if($_SESSION['role'] != 'artist')
+        if((new Session())->role() != 'artist')
         {
             $_SESSION['error'] = "Unauthorized.";
             header("Location: /");
