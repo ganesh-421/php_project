@@ -34,7 +34,7 @@ class UserController
                 "first_name" => $_POST['first_name'],
                 "last_name" => $_POST['last_name'],
                 "email" => $_POST['email'],
-                "password" => password_hash($_POST['password'], PASSWORD_DEFAULT),
+                "password" => $_POST['password'],
                 "phone" => $_POST['phone'],
                 "dob" => $_POST['dob'],
                 "gender" => $_POST['gender'],
