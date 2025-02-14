@@ -26,11 +26,6 @@ class AuthController
                 exit;
             }
         } else {
-            if($_SESSION['user_id'] ?? false)
-            {
-                header("Location: /dashboard");
-                exit;
-            }
             require_once __DIR__ . '/../Views/front/login.php';
         }
     }
@@ -48,18 +43,13 @@ class AuthController
                 exit;
             }
         } else {
-            if($_SESSION['user_id'])
-            {
-                header("Location: /dashboard");
-                exit;
-            }
             require_once __DIR__ . '/../Views/front/register.php';
         }
     }
 
     public function logout()
     {
-        session_destroy();
+        $this->repository->logout($_POST['email'], $_POST['password']);
         header("Location: /login");
     }
 }

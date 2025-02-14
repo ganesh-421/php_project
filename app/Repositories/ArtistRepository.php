@@ -7,9 +7,11 @@ use Exception;
 
 class ArtistRepository extends BaseRepository
 {
+    private $auth;
     public function __construct()
     {
         $this->model = new Artist();
+        $this->auth = new AuthRepository();
     }
 
     /**
@@ -20,8 +22,8 @@ class ArtistRepository extends BaseRepository
     public function add($data)
     {
         try {
-            $data = [
-                "name" => $data['name'],
+            $artistData = [
+                "name" => $data['first_name'] . " " . $data['last_name'],
                 "dob" => $data['dob'],
                 "gender" => $data['gender'],
                 "address" => $data['address'],
@@ -30,11 +32,30 @@ class ArtistRepository extends BaseRepository
                 "created_at" => date('Y-m-d H:i:s'),
                 "updated_at" => date('Y-m-d H:i:s'),
             ];
-            $this->create($data);
+            
+            $userData = [
+                "first_name" => $data['first_name'],
+                "last_name" => $data['last_name'],
+                "email" => $data['email'],
+                "password" => $data['password'],
+                "phone" => $data['phone'],
+                "dob" => $data['dob'],
+                "gender" => $data['gender'],
+                "role" => 'artist',
+                "address" => $data['address'],
+                "created_at" => date('Y-m-d H:i:s'),
+                "updated_at" => date('Y-m-d H:i:s'),
+            ];
+            $this->model->db->beginTransaction();
+            $this->auth->register($userData);
+            $artistData['user_id'] = $this->auth->findByEmail($data['email'])['id'];
+            $this->create($artistData);
             $_SESSION['success'] = "Artist Created Succesfully";
+            $this->model->db->commit();
             return true;
         } catch(Exception $e)
         {
+            $this->model->db->rollback();
             $_SESSION['error'] = $e->getMessage();
             return false; 
         }

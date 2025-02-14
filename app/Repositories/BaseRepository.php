@@ -10,18 +10,18 @@ class BaseRepository
     /**
      * @var Model model instance [database connection instance]
      */
-    protected $model;
+    public $model;
 
     public function create(array $data)
     {
         try {
-
             $cols = array_keys($data);
             $vals = array_values($data);
            return $this->model->create($cols, $vals);
         } catch(Exception $e)
         {
-            $_SESSION['error'] = "Something Went Wrong";
+            // $_SESSION['error'] = "Something Went Wrong";
+            $_SESSION['error'] = $e->getMessage();
             return false;
         }
     }
@@ -74,5 +74,18 @@ class BaseRepository
             return false;
         }
     }
-   
+
+    /**
+     * find by id 
+     */
+    public function find($id)
+    {
+        try {
+            return $this->model->delete($id);
+        } catch(Exception $e)
+        {
+            $_SESSION['error'] = "Something Went Wrong";
+            return false;
+        }
+    }
 }

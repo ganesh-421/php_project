@@ -23,10 +23,38 @@
     </nav>
     <div class="bg-white p-4 shadow rounded-lg">
         <form action="/create/artist" method="POST" class="space-y-4 p-4 border rounded-lg max-w-lg mx-auto">
-            <div>
+            <!-- <div>
                 <label class="block text-sm font-medium">Name</label>
                 <input type="text" name="name" required class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400">
-            </div>
+            </div> -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">First Name</label>
+                    <input type="text" name="first_name" class="w-full px-4 py-2 mt-2 border rounded-lg focus:ring focus:ring-blue-200 focus:outline-none" placeholder="Enter your first name" required>
+                </div>
+
+                <!-- Last Name -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Last Name</label>
+                    <input type="text" name="last_name" class="w-full px-4 py-2 mt-2 border rounded-lg focus:ring focus:ring-blue-200 focus:outline-none" placeholder="Enter your last name" required>
+                </div>
+
+                <!-- Email -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" name="email" class="w-full px-4 py-2 mt-2 border rounded-lg focus:ring focus:ring-blue-200 focus:outline-none" placeholder="Enter your email" required>
+                </div>
+
+                <!-- Password -->
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" name="password" class="w-full px-4 py-2 mt-2 border rounded-lg focus:ring focus:ring-blue-200 focus:outline-none" placeholder="Enter your password" required>
+                </div>
+
+                <!-- Phone -->
+                <div class="mt-4">
+                    <label class="block text-sm font-medium text-gray-700">Phone</label>
+                    <input type="text" name="phone" class="w-full px-4 py-2 mt-2 border rounded-lg focus:ring focus:ring-blue-200 focus:outline-none" placeholder="Enter your phone number" required>
+                </div>
             <div>
                 <label class="block text-sm font-medium">Date of Birth</label>
                 <input type="date" name="dob" required class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400">

@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Session;
 use App\Models\User;
 use Exception;
 
@@ -24,14 +25,14 @@ class AuthRepository extends BaseRepository
             if($user)
             {
                 $_SESSION['error'] = "Email already exists";
-                return false;
+                throw new Exception("Email Already Exists");
             }
-            $this->create($data);
+            $this->createRegistration($data);
             return true;
         } catch(Exception $e)
         {
             $_SESSION['error'] = $e->getMessage();
-            return false;
+            throw $e;
         }
     }
 
@@ -65,9 +66,10 @@ class AuthRepository extends BaseRepository
     {
         $user = $this->findByEmail($email);
         if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user_name'] = $user['first_name'] . " " . $user['last_name'];
-            $_SESSION['role'] = $user['role'];
+            $columns = ['user_id', 'token'];
+            $_SESSION['token'] = hash('sha256', time());
+            $data=  [$user['id'], $_SESSION['token']];
+            (new Session())->create($columns, $data);
             return true;
         }
         return false;
@@ -101,5 +103,21 @@ class AuthRepository extends BaseRepository
     public function paginated(?int $page, ?int $per_page)
     {
         return $this->model->paginate($page, $per_page);
+    }
+
+    public function createRegistration(array $data)
+    {
+        if($data['password'] ?? false)
+        {
+            $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+        }
+        $this->create($data);
+    }
+
+    public function logout()
+    {
+        $current = (new Session())->current();
+        (new Session)->delete($current['id']);
+        session_destroy();
     }
 }

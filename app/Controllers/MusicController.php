@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Artist;
+use App\Models\Session;
 use App\Repositories\MusicRepository;
 
 class MusicController
@@ -10,12 +11,6 @@ class MusicController
     private $repository;
     public function __construct()
     {
-        if(!$_SESSION['user_id'])
-        {
-            $_SESSION['error'] = "Session Expired";
-            header("Location: /login");
-            exit;
-        }
         $this->repository = new MusicRepository();
     }
     public function index()
@@ -35,7 +30,7 @@ class MusicController
 
     public function create()
     {
-        if($_SESSION['role'] != 'artist')
+        if(((new Session())->role()) != 'artist')
         {
             $_SESSION['error'] = "Unauthorized.";
             header("Location: /");
@@ -61,7 +56,7 @@ class MusicController
                 exit;
             }
         } else {
-            if($_SESSION['role'] != 'artist')
+            if((new Session())->role() != 'artist')
             {
                 header("Location: /", true, 403);
             }
@@ -73,7 +68,7 @@ class MusicController
 
     public function edit()
     {
-        if($_SESSION['role'] != 'artist')
+        if((new Session())->role() != 'artist')
         {
             $_SESSION['error'] = "Unauthorized.";
             header("Location: /");
@@ -99,7 +94,7 @@ class MusicController
                 exit;
             }
         } else {
-            if($_SESSION['role'] != 'artist')
+            if((new Session())->role() != 'artist')
             {
                 $_SESSION['error'] = "Unauthorized.";
                 header("Location: /");
@@ -113,7 +108,7 @@ class MusicController
 
     public function delete()
     {
-        if($_SESSION['role'] != 'artist')
+        if((new Session())->role() != 'artist')
         {
             $_SESSION['error'] = "Unauthorized.";
             header("Location: /");

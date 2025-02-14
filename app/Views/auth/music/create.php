@@ -25,10 +25,10 @@
         <form action="/create/music" method="POST" class="space-y-4 p-4 border rounded-lg max-w-lg mx-auto">
             <div>
                 <label class="block text-sm font-medium">Artist</label>
-                <select name="artist_id" required class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400">
+                <select name="artist_id" required class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-400" disabled>
                     <option value="">Select an Artist</option>
                     <?php foreach ($artists as $artist) { ?>
-                        <option value="<?= $artist['id'] ?>" <?= (isset($_GET['artist_id'])) ? (($artist['id'] == $_GET['artist_id']) ? 'selected' : '' ) : "" ?>><?= htmlspecialchars($artist['name']) ?></option>
+                        <option <?= $artist['user_id'] == ((new App\Models\Session())->auth()['id']) ? "selected" : "" ?> value="<?= $artist['id'] ?>" <?= (isset($_GET['artist_id'])) ? (($artist['id'] == $_GET['artist_id']) ? 'selected' : '' ) : "" ?>><?= htmlspecialchars($artist['name']) ?></option>
                     <?php } ?>
                 </select>
             </div>
