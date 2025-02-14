@@ -48,7 +48,7 @@ class ArtistRepository extends BaseRepository
             ];
             $this->model->db->beginTransaction();
             $this->auth->register($userData);
-            $data['user_id'] = $this->auth->findByEmail($data['email'])['id'];
+            $artistData['user_id'] = $this->auth->findByEmail($data['email'])['id'];
             $this->create($artistData);
             $_SESSION['success'] = "Artist Created Succesfully";
             $this->model->db->commit();
