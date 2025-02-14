@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Artist;
+use App\Models\Music;
 use App\Models\Session;
 use App\Repositories\MusicRepository;
 
@@ -30,7 +31,7 @@ class MusicController
 
     public function create()
     {
-        if(((new Session())->role()) != 'artist')
+        if((((new Session())->role())) != 'artist' && ((new Session())->auth()['id'] != (new Artist())->find($_REQUEST['artist_id'])['user_id']) )
         {
             $_SESSION['error'] = "Unauthorized.";
             header("Location: /");
@@ -68,12 +69,17 @@ class MusicController
 
     public function edit()
     {
-        if((new Session())->role() != 'artist')
+        $id = $_REQUEST['music_id'];
+        $authUser = (new Session())->auth();
+        $music = (new Music())->find($id);
+        $artist = (new Artist())->find($music['artist_id']);
+        var_dump(($authUser['id'] != $artist['user_id']));
+
+        if($authUser['role'] != 'artist' || $authUser['id'] != $artist['user_id'])
         {
             $_SESSION['error'] = "Unauthorized.";
             header("Location: /");
-        }
-        $id = $_REQUEST['music_id'];
+        }                     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 "artist_id" => $_REQUEST['artist_id'],
