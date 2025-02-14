@@ -15,7 +15,6 @@ class BaseRepository
     public function create(array $data)
     {
         try {
-
             $cols = array_keys($data);
             $vals = array_values($data);
            return $this->model->create($cols, $vals);

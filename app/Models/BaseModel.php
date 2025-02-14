@@ -10,7 +10,7 @@ class BaseModel
     /**
      * @var PDO instance [database connection instance]
      */
-    protected $db;
+    public $db;
 
     /**
      * @var String table

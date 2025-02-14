@@ -39,7 +39,7 @@ class ArtistController
                 header("Location: /artists");
                 exit;
             } else {
-                $_SESSION['error'] = "Artist Couldn't be Added";
+                // $_SESSION['error'] = "Artist Couldn't be Added";
                 header("Location: /create/artist");
                 exit;
             }

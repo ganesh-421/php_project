@@ -22,7 +22,7 @@ class ArtistRepository extends BaseRepository
     public function add($data)
     {
         try {
-            $data = [
+            $artistData = [
                 "name" => $data['first_name'] . " " . $data['last_name'],
                 "dob" => $data['dob'],
                 "gender" => $data['gender'],
@@ -43,18 +43,19 @@ class ArtistRepository extends BaseRepository
                 "gender" => $data['gender'],
                 "role" => 'artist',
                 "address" => $data['address'],
-                "first_release_year" => $data['first_release_year'],
-                "no_of_albums_released" => $data['no_of_albums_released'],
                 "created_at" => date('Y-m-d H:i:s'),
                 "updated_at" => date('Y-m-d H:i:s'),
             ];
-            $this->auth->createRegistration($userData);
+            $this->model->db->beginTransaction();
+            $this->auth->register($userData);
             $data['user_id'] = $this->auth->findByEmail($data['email'])['id'];
-            $this->create($data);
+            $this->create($artistData);
             $_SESSION['success'] = "Artist Created Succesfully";
+            $this->model->db->commit();
             return true;
         } catch(Exception $e)
         {
+            $this->model->db->rollback();
             $_SESSION['error'] = $e->getMessage();
             return false; 
         }

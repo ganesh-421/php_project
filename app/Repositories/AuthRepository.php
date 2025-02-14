@@ -25,14 +25,14 @@ class AuthRepository extends BaseRepository
             if($user)
             {
                 $_SESSION['error'] = "Email already exists";
-                return false;
+                throw new Exception("Email Already Exists");
             }
             $this->createRegistration($data);
             return true;
         } catch(Exception $e)
         {
             $_SESSION['error'] = $e->getMessage();
-            return false;
+            throw $e;
         }
     }
 
