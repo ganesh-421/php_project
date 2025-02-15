@@ -25,7 +25,7 @@ class BaseApiController
      * @param array
      * @param int
      */
-    public function sendError(string $message = "Error", array $errors = [], int $code = 400)
+    public function sendError(string $message = "Error", int $code = 400, array $errors = [])
     {
         if(!empty($errors))
             return $this->sendJsonResponse([
@@ -41,8 +41,7 @@ class BaseApiController
 
     /**
      * sends json response
-     * @param string 
-     * @param array
+     * @param array 
      * @param int
      */
     private function sendJsonResponse(array $response, int $code)

@@ -19,6 +19,17 @@ class Config
         }
     }
 
+    public static function jwt($key)
+    {
+        switch($key)
+        {
+            case 'secret':
+                return static::getEnvValue('JWT_SECRET');
+            case 'algorithm':
+                return static::getEnvValue('JWT_ALGORITHM');
+        }
+    }
+
     private static function getEnvValue($key) {
         $envFile = __DIR__ . '/../../.env';
         if (!file_exists($envFile)) {

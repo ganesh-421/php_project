@@ -85,7 +85,10 @@ class Validator
     protected function validateBefore($field, $date)
     {
         $inputDate = new DateTime($this->data[$field]);
-        $compareDate = new DateTime($date);
+        if($date == 'today')
+            $compareDate = new DateTime();
+        else 
+            $compareDate = new DateTime($date);
 
         if ($inputDate >= $compareDate) {
             $this->addError($field, ucfirst($field) . " must be before $date.");

@@ -2,6 +2,8 @@
 
 namespace App\Controllers\Api;
 
+use App\Core\Config;
+use App\Core\Jwt\Jwt;
 use App\Core\Validator;
 use App\Models\User;
 use App\Repositories\AuthRepository;
@@ -14,6 +16,9 @@ class AuthController extends BaseApiController
         $this->repository = new AuthRepository();
     }
 
+    /**
+     * logs user into the system after verifying credentials
+     */
     public function login()
     {
         $rules = [
@@ -29,17 +34,17 @@ class AuthController extends BaseApiController
 
         if(!$validator->validate()) {
             $errors = $validator->errors();
-            return $this->sendError("Validation Error", $errors, 422);
+            return $this->sendError("Validation Error", 422, $errors);
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $result = $this->repository->login($_POST['email'], $_POST['password']);
-            if($result)
+            $user_id = $this->repository->login($_POST['email'], $_POST['password']);
+            if($user_id)
             {
-                // header("Location: /dashboard");
-                // exit;
+                $token = $this->repository->model->createToken($user_id);
+                $this->sendSuccess(['token' => $token], "Succesfully Logged In");
             } else {
-                return ;
+                $this->sendError("Authentication Failed");
             }
         } 
     }
