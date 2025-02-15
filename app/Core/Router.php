@@ -8,24 +8,11 @@ class Router
 
     public static function get($uri, $controllerMethod, $middleware = null)
     {
-        // if($middleware ?? false)
-        // {
-        //     self::middleware($middleware);
-        // }
-        // self::$routes['GET'][$uri] = $controllerMethod;
-        // return self::class;
-
-
         self::$routes['GET'][$uri] = ['controller' => $controllerMethod, 'middleware' => $middleware];
     }
 
     public static function post($uri, $controllerMethod, $middleware = null)
     {
-        // if($middleware ?? false)
-        // {
-        //     self::middleware($middleware);
-        // }
-        // self::$routes['POST'][$uri] = $controllerMethod;
         self::$routes['POST'][$uri] = ['controller' => $controllerMethod, 'middleware' => $middleware];
     }
 
