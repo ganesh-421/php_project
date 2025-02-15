@@ -3,6 +3,7 @@
 use App\Core\Request;
 
 session_start();
+date_default_timezone_set('Asia/Kathmandu');
 // psr-4 autoloader
 require_once __DIR__ . '/../app/Core/Autoloader.php';
 

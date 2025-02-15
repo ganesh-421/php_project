@@ -6,7 +6,7 @@ use App\Core\Validator;
 use App\Models\User;
 use App\Repositories\AuthRepository;
 
-class AuthController
+class AuthController extends BaseApiController
 {
     private $repository;
     public function __construct()
@@ -17,7 +17,7 @@ class AuthController
     public function login()
     {
         $rules = [
-            'email' => "required|exists:user,email",
+            'email' => "required|email|exists:user,email",
             'password' => 'required'
         ];
         $data = [
@@ -28,20 +28,19 @@ class AuthController
         $validator = new Validator($data, $rules, new User());
 
         if(!$validator->validate()) {
-            $errors = json_encode($validator->errors());
-            var_dump($errors);
+            $errors = $validator->errors();
+            return $this->sendError("Validation Error", $errors, 422);
         }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = $this->repository->login($_POST['email'], $_POST['password']);
-            // if($result)
-            // {
-            //     header("Location: /dashboard");
-            //     exit;
-            // } else {
-            //     $_SESSION['error'] = "Invalid Credentials";
-            //     header("Location: /login");
-            //     exit;
-            // }
+            if($result)
+            {
+                // header("Location: /dashboard");
+                // exit;
+            } else {
+                return ;
+            }
         } 
     }
 
