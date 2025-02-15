@@ -11,7 +11,14 @@
 <body class="bg-gray-100">
     <!-- Top Navigation Bar -->
     <nav class="bg-white shadow-md p-4 flex justify-between items-center fixed top-0 w-full z-50">
-        <span class="text-xl font-bold"><?= $role ?></span>
+        <div class="flex gap-5 items-center">
+            <span class="text-xl font-bold">
+                <?= $role ?>
+            </span>
+            <button id="sidebar-toggle-btn" class=" hover:scale-110 transition-transform duration-200 ease-in-out md:hidden ">
+                <i class="ph ph-list font-bold font-lg text-xl"></i>
+            </button>
+        </div>
         <div class="relative">
             <button id="user-menu-btn" class="flex items-center space-x-2 focus:outline-none">
                 <img src="https://i.pravatar.cc/40" class="w-8 h-8 rounded-full">
@@ -29,7 +36,7 @@
 
     <!-- Sidebar -->
     <div class="flex pt-16 flex-col md:flex-row">
-        <aside class="w-64 bg-gray-900 text-white min-h-screen p-4 hidden md:block transition-all duration-300 ease-in-out" id="sidebar">
+        <aside class="w-64 bg-gray-900 text-white min-h-screen p-4 fixed md:relative md:block transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out z-50" id="sidebar">
             <nav>
                 <ul>
                     

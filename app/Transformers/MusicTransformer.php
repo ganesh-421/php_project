@@ -2,7 +2,9 @@
 
 namespace App\Transformers;
 
-class UserTransformer
+use App\Models\Artist;
+
+class MusicTransformer
 {
     /**
      * @var array resource
@@ -16,9 +18,9 @@ class UserTransformer
     {
         return [
             'id' => (int) $item['id'],
-            'name' => $item['first_name'] . " " . $item['last_name'],
-            'email' => $item['email'],
-            'role' => $item['role']
+            'artist' => (new Artist())->find((int) $item['artist_id'])['name'],
+            'title' => $item['title'],
+            'genre' => $item['genre'],
         ];
     }
 

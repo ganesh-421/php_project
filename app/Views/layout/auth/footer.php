@@ -40,6 +40,10 @@
             document.querySelector("button[type=submit]").disabled = true;
         });
 
+        document.querySelector("#sidebar-toggle-btn").addEventListener('click', function() {
+            document.querySelector("#sidebar").classList.toggle('-translate-x-full');
+        });
+
     </script>
 </body>
 </html>

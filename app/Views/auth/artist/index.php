@@ -29,46 +29,48 @@
                     </div>
                 <?php } ?>
             </div>
-            <table class="w-full border-collapse border border-gray-200">
-                <thead>
-                    <tr class="bg-gray-100">
-                        <th class="border p-2">Name</th>
-                        <th class="border p-2">Date Of Birth</th>
-                        <th class="border p-2">Gender</th>
-                        <th class="border p-2">Address</th>
-                        <th class="border p-2">First Release Year</th>
-                        <th class="border p-2">Number Of Albums</th>
-                        <th class="border p-2">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach($artists['data'] as $key=>$artist) { ?>
-                        <?php 
-                            if($artist['gender'] === 'm')
-                                $gender = "Male";
-                            else if($artist['gender'] === 'f')
-                                $gender = "Female";
-                            else 
-                                $gender = "Others";
-                        ?>
-                        <tr>
-                            <td class="border p-2"><?= $artist['name']  ?></td>
-                            <td class="border p-2"><?= date('Y-m-d', strtotime($artist['dob']))  ?></td>
-                            <td class="border p-2"><?= $gender  ?></td>
-                            <td class="border p-2"><?= $artist['address']  ?></td>
-                            <td class="border p-2"><?= $artist['first_release_year']  ?></td>
-                            <td class="border p-2"><?= $artist['no_of_albums_released']  ?></td>
-                            <td class="border p-2 flex space-x-2">
-                                <a href="/musics?artist_id=<?= $artist['id'] ?>" class="text-green-600 flex items-center"><i class="ph ph-music-notes mr-1"></i> Songs</a>
-                                <?php if(($_SESSION['role'] === 'artist_manager')) { ?>
-                                    <a href="/update/artist?artist_id=<?= $artist['id'] ?>" class="text-blue-600 flex items-center"><i class="ph ph-pencil-line mr-1"></i> Edit</a>
-                                    <button onclick="showDeleteModal('artist_id', <?= $artist['id']  ?>)" class="text-red-600 flex items-center"><i class="ph ph-trash mr-1"></i> Delete</button>
-                                <?php } ?>
-                            </td>
+            <div class="overflow-x-scroll">
+                <table class="w-full border-collapse border border-gray-200">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="border p-2">Name</th>
+                            <th class="border p-2">Date Of Birth</th>
+                            <th class="border p-2">Gender</th>
+                            <th class="border p-2">Address</th>
+                            <th class="border p-2">First Release Year</th>
+                            <th class="border p-2">Number Of Albums</th>
+                            <th class="border p-2">Actions</th>
                         </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php foreach($artists['data'] as $key=>$artist) { ?>
+                            <?php 
+                                if($artist['gender'] === 'm')
+                                    $gender = "Male";
+                                else if($artist['gender'] === 'f')
+                                    $gender = "Female";
+                                else 
+                                    $gender = "Others";
+                            ?>
+                            <tr>
+                                <td class="border p-2"><?= $artist['name']  ?></td>
+                                <td class="border p-2"><?= date('Y-m-d', strtotime($artist['dob']))  ?></td>
+                                <td class="border p-2"><?= $gender  ?></td>
+                                <td class="border p-2"><?= $artist['address']  ?></td>
+                                <td class="border p-2"><?= $artist['first_release_year']  ?></td>
+                                <td class="border p-2"><?= $artist['no_of_albums_released']  ?></td>
+                                <td class="border p-2 flex space-x-2">
+                                    <a href="/musics?artist_id=<?= $artist['id'] ?>" class="text-green-600 flex items-center"><i class="ph ph-music-notes mr-1"></i> Songs</a>
+                                    <?php if(($_SESSION['role'] === 'artist_manager')) { ?>
+                                        <a href="/update/artist?artist_id=<?= $artist['id'] ?>" class="text-blue-600 flex items-center"><i class="ph ph-pencil-line mr-1"></i> Edit</a>
+                                        <button onclick="showDeleteModal('artist_id', <?= $artist['id']  ?>)" class="text-red-600 flex items-center"><i class="ph ph-trash mr-1"></i> Delete</button>
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
             <!-- Pagination -->
             <div class="flex space-x-1 mt-1 items-center justify-end">
                 <small class="text-gray-500 hover:text-gray-600">

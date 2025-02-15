@@ -20,45 +20,47 @@
             <input type="text" placeholder="Search..." class="border p-2 rounded-lg w-full md:w-auto">
             <a href="/create/user" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Create New</a>
         </div>
-        <table class="w-full border-collapse border border-gray-200">
-            <thead>
-                <tr class="bg-gray-100">
-                    <th class="border p-2">Name</th>
-                    <th class="border p-2">Email</th>
-                    <th class="border p-2">Date Of Birth</th>
-                    <th class="border p-2">Gender</th>
-                    <th class="border p-2">Address</th>
-                    <th class="border p-2">Phone</th>
-                    <th class="border p-2">Role</th>
-                    <th class="border p-2">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach($users['data'] as $key=>$user) { ?>
-                    <?php 
-                        if($user['gender'] === 'm')
-                            $gender = "Male";
-                        else if($user['gender'] === 'f')
-                            $gender = "Female";
-                        else 
-                            $gender = "Others";
-                    ?>
-                    <tr>
-                        <td class="border p-2"><?= $user['first_name'] . " " . $user['last_name']  ?></td>
-                        <td class="border p-2"><?= $user['email']  ?></td>
-                        <td class="border p-2"><?= date('Y-m-d', strtotime($user['dob']))  ?></td>
-                        <td class="border p-2"><?= $gender  ?></td>
-                        <td class="border p-2"><?= $user['address']  ?></td>
-                        <td class="border p-2"><?= $user['phone']  ?></td>
-                        <td class="border p-2"><?= $user['role']  ?></td>
-                        <td class="border p-2 flex space-x-2">
-                            <a href="/update/user?user_id=<?= $user['id'] ?>" class="text-blue-600 flex items-center"><i class="ph ph-pencil-line mr-1"></i> Edit</a>
-                            <button onclick="showDeleteModal('user_id' ,<?= $user['id']  ?>)" class="text-red-600 flex items-center"><i class="ph ph-trash mr-1"></i> Delete</button>
-                        </td>
+        <div class="overflow-x-scroll">
+            <table class="w-full border-collapse border border-gray-200">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="border p-2">Name</th>
+                        <th class="border p-2">Email</th>
+                        <th class="border p-2">Date Of Birth</th>
+                        <th class="border p-2">Gender</th>
+                        <th class="border p-2">Address</th>
+                        <th class="border p-2">Phone</th>
+                        <th class="border p-2">Role</th>
+                        <th class="border p-2">Actions</th>
                     </tr>
-                <?php } ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach($users['data'] as $key=>$user) { ?>
+                        <?php 
+                            if($user['gender'] === 'm')
+                                $gender = "Male";
+                            else if($user['gender'] === 'f')
+                                $gender = "Female";
+                            else 
+                                $gender = "Others";
+                        ?>
+                        <tr>
+                            <td class="border p-2"><?= $user['first_name'] . " " . $user['last_name']  ?></td>
+                            <td class="border p-2"><?= $user['email']  ?></td>
+                            <td class="border p-2"><?= date('Y-m-d', strtotime($user['dob']))  ?></td>
+                            <td class="border p-2"><?= $gender  ?></td>
+                            <td class="border p-2"><?= $user['address']  ?></td>
+                            <td class="border p-2"><?= $user['phone']  ?></td>
+                            <td class="border p-2"><?= $user['role']  ?></td>
+                            <td class="border p-2 flex space-x-2">
+                                <a href="/update/user?user_id=<?= $user['id'] ?>" class="text-blue-600 flex items-center"><i class="ph ph-pencil-line mr-1"></i> Edit</a>
+                                <button onclick="showDeleteModal('user_id' ,<?= $user['id']  ?>)" class="text-red-600 flex items-center"><i class="ph ph-trash mr-1"></i> Delete</button>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
         <!-- Pagination -->
         <div class="flex space-x-1 mt-1 items-center justify-end">
             <small class="text-gray-500 hover:text-gray-600">

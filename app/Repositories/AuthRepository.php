@@ -66,11 +66,11 @@ class AuthRepository extends BaseRepository
     {
         $user = $this->findByEmail($email);
         if ($user && password_verify($password, $user['password'])) {
-            $columns = ['user_id', 'token'];
             $_SESSION['token'] = hash('sha256', time());
+            $columns = ['user_id', 'token'];
             $data=  [$user['id'], $_SESSION['token']];
             (new Session())->create($columns, $data);
-            return true;
+            return $user['id'];
         }
         return false;
     }

@@ -2,8 +2,8 @@
 
 namespace App\Middlewares;
 
+use App\Core\Request;
 use App\Models\Session;
-use App\Repositories\AuthRepository;
 
 class AuthMiddleware
 {
@@ -31,9 +31,19 @@ class AuthMiddleware
         $session = new Session();
         if(empty($session->auth()))
         {
-            if($_SERVER['REQUEST_URI'] !== self::$redirectTo)
+            if(!Request::expectJson())
             {
-                header("Location: " . self::$redirectTo);
+                if($_SERVER['REQUEST_URI'] !== self::$redirectTo)
+                {
+                    header("Location: " . self::$redirectTo);
+                    exit;
+                }
+            } else {
+                header('Content-Type: application/json');
+                http_response_code(403);
+                echo json_encode([
+                    'message'=>'unauthenticated'
+                ]);
                 exit;
             }
         }

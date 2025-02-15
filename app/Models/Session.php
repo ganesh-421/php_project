@@ -2,6 +2,11 @@
 
 namespace App\Models;
 
+use App\Core\Config;
+use App\Core\Jwt\Jwt;
+use App\Core\Jwt\Key;
+use App\Core\Request;
+
 class Session extends BaseModel
 {
     public function __construct()
@@ -22,7 +27,18 @@ class Session extends BaseModel
 
     public function auth()
     {
-        $token = $_SESSION['token'];
+        if(!Request::expectJson())
+        {
+            $token = $_SESSION['token'];
+            return $this->user($token);
+        } else {
+            $token = Request::getAuthSession();
+            return $this->user($token);
+        }
+    }
+
+    public function user($token)
+    {
         $query = "SELECT `user`.* FROM `user` INNER JOIN `session` ON `user`.`id` = `session`.`user_id` WHERE `session`.`token`=?";
         $stmt = $this->db->prepare($query);
         $stmt->execute([$token]);
