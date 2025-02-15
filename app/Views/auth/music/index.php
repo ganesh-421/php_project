@@ -25,41 +25,43 @@
                 <a href="/create/artist" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Create New</a>
             <?php } ?>
         </div>
-        <table class="w-full border-collapse border border-gray-200">
-            <thead>
-                <tr class="bg-gray-100">
-                    <th class="border p-2">Title</th>
-                    <th class="border p-2">Artist</th>
-                    <th class="border p-2">Album Name</th>
-                    <th class="border p-2">Genre</th>
-                    <th class="border p-2">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php 
-                    if(!isset($_GET['artist_id']))
-                        $musics = $musics['data'];
-                ?>
-                <?php foreach($musics as $key=>$music) { ?>
-                    <tr>
-                        <td class="border p-2"><?= $music['title']  ?></td>
-                        <td class="border p-2">
-                            <?php $artist = (new \App\Models\Artist())->findBy('id', $music['artist_id'])[0]  ?>
-                            <?= $artist['name'] ?>
-                            <?=($auth['id'] == $artist['user_id']) ?  "(Its You)" : "" ?>
-                        </td>
-                        <td class="border p-2"><?= $music['album_name']  ?></td>
-                        <td class="border p-2"><?= $music['genre']  ?></td>
-                        <td class="border p-2 flex space-x-2">
-                            <?php if(($auth['role'] === 'artist') && $auth['id'] == $artist['user_id']) { ?>
-                                <a href="/update/music?music_id=<?= $music['id'] ?>" class="text-blue-600 flex items-center"><i class="ph ph-pencil-line mr-1"></i> Edit</a>
-                                <button onclick="showDeleteModal('music_id', <?= $music['id']  ?>)" class="text-red-600 flex items-center"><i class="ph ph-trash mr-1"></i> Delete</button>
-                            <?php } ?>
-                        </td>
+        <div class="overflow-x-scroll">
+            <table class="w-full border-collapse border border-gray-200">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="border p-2">Title</th>
+                        <th class="border p-2">Artist</th>
+                        <th class="border p-2">Album Name</th>
+                        <th class="border p-2">Genre</th>
+                        <th class="border p-2">Actions</th>
                     </tr>
-                <?php } ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php 
+                        if(!isset($_GET['artist_id']))
+                            $musics = $musics['data'];
+                    ?>
+                    <?php foreach($musics as $key=>$music) { ?>
+                        <tr>
+                            <td class="border p-2"><?= $music['title']  ?></td>
+                            <td class="border p-2">
+                                <?php $artist = (new \App\Models\Artist())->findBy('id', $music['artist_id'])[0]  ?>
+                                <?= $artist['name'] ?>
+                                <?=($auth['id'] == $artist['user_id']) ?  "(Its You)" : "" ?>
+                            </td>
+                            <td class="border p-2"><?= $music['album_name']  ?></td>
+                            <td class="border p-2"><?= $music['genre']  ?></td>
+                            <td class="border p-2 flex space-x-2">
+                                <?php if(($auth['role'] === 'artist') && $auth['id'] == $artist['user_id']) { ?>
+                                    <a href="/update/music?music_id=<?= $music['id'] ?>" class="text-blue-600 flex items-center"><i class="ph ph-pencil-line mr-1"></i> Edit</a>
+                                    <button onclick="showDeleteModal('music_id', <?= $music['id']  ?>)" class="text-red-600 flex items-center"><i class="ph ph-trash mr-1"></i> Delete</button>
+                                <?php } ?>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
         <?php if(!isset($_GET['artist_id'])) { ?>
             <!-- Pagination -->
             <div class="flex space-x-1 mt-1 items-center justify-end">
