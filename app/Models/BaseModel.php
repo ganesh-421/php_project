@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Core\Database;
+use Exception;
 use PDO;
 
 class BaseModel
@@ -133,19 +134,23 @@ class BaseModel
      */
     public function update($id, $columns, $values)
     {
-        $qs = "";
-        for ($i = 0; $i < count($columns); $i++) {
-            if ($i != (count($columns) - 1)) {
-                $qs .= $columns[$i] . " = ?, ";
-            } else {
-                $qs .= $columns[$i] . " = ? ";
+        try {
+            $qs = "";
+            for ($i = 0; $i < count($columns); $i++) {
+                if ($i != (count($columns) - 1)) {
+                    $qs .= $columns[$i] . " = ?, ";
+                } else {
+                    $qs .= $columns[$i] . " = ? ";
+                }
             }
+            $query = "UPDATE " . $this->table . " SET " . $qs . " WHERE id = ?";
+            $stmt = $this->db->prepare($query);
+            array_push($values, $id);
+            $stmt->execute($values);
+            return true;
+        } catch(Exception $e) {
+            throw new Exception($e->getMessage());
         }
-        $query = "UPDATE " . $this->table . " SET " . $qs . " WHERE id = ?";
-        $stmt = $this->db->prepare($query);
-        array_push($values, $id);
-        $stmt->execute($values);
-        return true;
     }
 
     /**

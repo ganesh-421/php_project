@@ -80,10 +80,9 @@ class Router
         $method = $_SERVER['REQUEST_METHOD'];
         // query parameters removal
         $uri = strtok($uri, '?');
-
+        
         if (isset($routes[$method][$uri])) {
             $route = $routes[$method][$uri];
-
             if (!empty($route['middleware'])) {
                 $middlewareClass = "App\\Middlewares\\" . ucfirst($route['middleware']) . "Middleware";
                 if (class_exists($middlewareClass)) {
