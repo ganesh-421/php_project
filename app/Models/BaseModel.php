@@ -57,6 +57,8 @@ class BaseModel
         $records = $stmt->fetchAll();
         $response = [
             'data' => $records,
+            'currentPage' => $page,
+            'perPage' => $limit,
             'total' => $totalRecords,
             'totalPages' => $totalPages,
             'from' => $offset + 1,
