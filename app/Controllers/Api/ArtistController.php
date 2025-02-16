@@ -43,7 +43,7 @@ class ArtistController extends BaseApiController
             "gender" => 'required|in:m,f,o',
             "address" => 'required|min:3|max:255',
             "role" => 'required|in:super_admin,admin,artist',
-            'first_release_year' => 'required|min:4|numeric',
+            'first_release_year' => 'required|min:4|numeric|before:today',
             'no_of_albums' => 'required|numeric',
         ];
         $data = [
@@ -98,7 +98,7 @@ class ArtistController extends BaseApiController
             "dob" => 'before:today',
             "gender" => 'in:m,f,o',
             "address" => 'min:3|max:255',
-            'first_release_year' => 'min:4|numeric',
+            'first_release_year' => 'min:4|numeric|before:today',
             'no_of_albums' => 'numeric',
         ];
         $data = [

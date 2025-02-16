@@ -124,6 +124,7 @@ class MusicController
                 "genre" => $_POST['genre'],
                 "updated_at" => date('Y-m-d H:i:s'),
             ];
+            
             $validator = new Validator($data, $rules, (new Music()));
     
             if(!$validator->validate()) {

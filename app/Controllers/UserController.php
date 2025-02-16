@@ -112,6 +112,16 @@ class UserController
                 "role" => $_POST['role'],
                 "updated_at" => date('Y-m-d H:i:s'),
             ];
+
+            $validator = new Validator($data, $rules, (new User()));
+            
+            if(!$validator->validate()) {
+                $errors = $validator->errors();
+                $_SESSION['errors'] = $errors;
+                header("Location: /update/user?user_id=".$id);
+                exit;
+            }
+
             $result = $this->repository->edit($id, $data);
             if($result)
             {

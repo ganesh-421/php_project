@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Core\Validator;
+use App\Models\Artist;
 use App\Models\Session;
 use App\Repositories\ArtistRepository;
 
@@ -26,13 +28,50 @@ class ArtistController
 
     public function create()
     {
+        $rules = [
+            "first_name" => 'required|min:3|max:255',
+            "last_name" => 'required|min:3|max:255',
+            "email" => 'required|email|unique:user,email',
+            "password" => 'required|min:8|max:15',
+            "phone" => 'required|min:10|max:10|unique:user,phone',
+            "dob" => 'required|before:today',
+            "gender" => 'required|in:m,f,o',
+            "address" => 'required|min:3|max:255',
+            "role" => 'required|in:super_admin,admin,artist',
+            'first_release_year' => 'required|min:4|numeric|before:today',
+            'no_of_albums' => 'required|numeric',
+        ];
+        $data = [
+            "first_name" => $_POST['first_name'],
+            "last_name" => $_POST['last_name'],
+            "email" => $_POST['email'],
+            "password" => $_POST['password'],
+            "phone" => $_POST['phone'],
+            "dob" => $_POST['dob'],
+            "gender" => $_POST['gender'],
+            "address" => $_POST['address'],
+            "role" => 'artist',
+            'first_release_year' => $_POST['first_release_year'],
+            'no_of_albums' => $_POST['no_of_albums'],
+            "created_at" => date('Y-m-d H:i:s'),
+            "updated_at" => date('Y-m-d H:i:s'),
+        ];
+
+        $validator = new Validator($data, $rules, (new Artist()));
+        if(!$validator->validate()) {
+            $errors = $validator->errors();
+            $_SESSION['errors'] = $errors;
+            header("Location: /create/artist");
+            exit;
+        }
+
         if(((new Session())->role() != 'artist_manager'))
         {
             $_SESSION['error'] = "Unauthorized.";
             header("Location: /");
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $result = $this->repository->add($_POST);
+            $result = $this->repository->add($data);
             if($result) 
             {
                 $_SESSION['success'] = "Artist Added Succesfully";
@@ -50,15 +89,50 @@ class ArtistController
 
     public function edit()
     {
+        $id = $_REQUEST['artist_id'];
+        $artist = (new Artist())->find($id);
+        if(empty($artist))
+        {
+            $_SESSION['error'] = "Artist Not Found";
+            header("Location: /artists");
+            exit;
+        }
         if(((new Session())->role() != 'artist_manager'))
         {
             $_SESSION['error'] = "Unauthorized.";
             header("Location: /");
         }
-        $id = $_REQUEST['artist_id'];
+
+        $rules = [
+            "name" => 'min:3|max:255',
+            "dob" => 'before:today',
+            "gender" => 'in:m,f,o',
+            "address" => 'min:3|max:255',
+            'first_release_year' => 'min:4|numeric|before:today',
+            'no_of_albums' => 'numeric',
+        ];
+
+        $data = [
+            "name" => $_POST['name'] ,
+            "dob" => $_POST['dob'],
+            "gender" => $_POST['gender'],
+            "address" => $_POST['address'],
+            'first_release_year' => $_POST['first_release_year'],
+            'no_of_albums' => $_POST['no_of_albums'],
+            "updated_at" => date('Y-m-d H:i:s'),
+        ];
+
+        $validator = new Validator($data, $rules, (new Artist()));
+            
+        if(!$validator->validate()) {
+            $errors = $validator->errors();
+            $_SESSION['errors'] = $errors;
+            header("Location: /update/artist?artist_id=".$id);
+            exit;
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            unset($_POST['artist_id']);
-            $result = $this->repository->update($id, $_POST);
+            $result = $this->repository->update($id, $data);
             if($result) 
             {
                 $_SESSION['success'] = "Artist Updated Succesfully";
@@ -77,9 +151,16 @@ class ArtistController
 
     public function delete()
     {
+        $id = $_REQUEST['artist_id'];
+        $artist = (new Artist())->find($id);
+        if(empty($artist))
+        {
+            $_SESSION['error'] = "Artist Not Found";
+            header("Location: /artists");
+            exit;
+        }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            file_put_contents('log.txt', print_r($_POST, true), FILE_APPEND);
-            $result = $this->repository->delete($_POST['artist_id']);
+            $result = $this->repository->delete($id);
             if($result) 
             {
                 $_SESSION['success'] = "Artist deleted succesfully";
