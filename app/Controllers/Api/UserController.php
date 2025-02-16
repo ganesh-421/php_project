@@ -86,7 +86,7 @@ class UserController extends BaseApiController
             "first_name" => $post_vars['first_name'] ?? $user['first_name'],
             "last_name" => $post_vars['last_name'] ?? $user['last_name'],
             "email" => $post_vars['email'] ?? $user['email'],
-            "password" =>  !empty($post_vars['password']) ? password_hash($post_vars['password'], PASSWORD_DEFAULT) : $user['password'],
+            "password" =>  $post_vars['password'],
             "phone" => $post_vars['phone'] ?? $user['phone'],
             "dob" => $post_vars['dob'] ?? $user['dob'],
             "gender" => $post_vars['gender'] ?? $user['gender'],
