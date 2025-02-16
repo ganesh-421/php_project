@@ -2,6 +2,8 @@
 
 namespace App\Core\Ratelimits;
 
+use App\Models\Session;
+
 class RateLimiter
 {
     private $limit;
@@ -25,6 +27,10 @@ class RateLimiter
      */
     private function getIP(): string
     {
+        $authUser  =(new Session())->auth();
+        if(!empty($authUser)) {
+            return $authUser['id'];
+        }
         return $_SERVER['REMOTE_ADDR'];
     }
 
