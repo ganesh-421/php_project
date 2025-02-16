@@ -48,6 +48,12 @@ class AuthRepository extends BaseRepository
                 $_SESSION['error'] = "Email already exists";
                 return false;
             }
+            if($data['password'] ?? false)
+            {
+                $data['password'] = password_hash($_POST['password'], PASSWORD_DEFAULT);
+            } else {
+                unset($data['password']);
+            }
             $result = $this->update($id, $data);
             return $result;
         } catch(Exception $e) {
