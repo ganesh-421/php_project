@@ -88,18 +88,18 @@
         </aside>
         <main class="flex-1 p-6">
             <div class="w-96 absolute bottom-0 right-2">
-                <?php if($_SESSION['error']) { ?>
+                <?php if($_SESSION['error'] ?? false) { ?>
                     <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
                         <span class="font-medium">Error!</span> <?php echo $_SESSION['error']; ?>
                     </div>
-                <?php } unset($_SESSION['error']) ?>
+                <?php unset($_SESSION['error']); }  ?>
         
-                <?php if($_SESSION['success']) { ?>
+                <?php if($_SESSION['success'] ?? false) { ?>
                     <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg" role="alert">
                         <span class="font-medium">Success!</span> <?php echo $_SESSION['success']; ?>
                     </div>
-                <?php } unset($_SESSION['success'])?>
-                <?php if($_SESSION['errors']) { ?>
+                <?php unset($_SESSION['success']); } ?>
+                <?php if($_SESSION['errors'] ?? false) { ?>
                     <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
                         <ul>
                             <?php foreach ($_SESSION['errors'] as $field => $messages) { ?>
@@ -110,7 +110,7 @@
                             <?php } ?>
                         </ul>
                     </div>
-                <?php } unset($_SESSION['errors']) ?>
+                <?php unset($_SESSION['errors']); } ?>
             </div>
 
             
