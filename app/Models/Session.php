@@ -12,7 +12,8 @@ class Session extends BaseModel
     public function __construct()
     {
         parent::__construct();
-        session_start();
+        if(session_status() === PHP_SESSION_DISABLED)
+            session_start();
         $this->table = "session";
     }
 

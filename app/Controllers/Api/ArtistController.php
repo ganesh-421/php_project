@@ -138,7 +138,7 @@ class ArtistController extends BaseApiController
         {
             return $this->sendError("Artist Not Found", 404);
         }
-        $result = $this->repository->delete($_POST['artist_id']);
+        $result = $this->repository->delete($id);
         if($result) 
         {
             return $this->sendSuccess([], "Artist Deleted Succesfully");
