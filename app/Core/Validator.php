@@ -6,11 +6,32 @@ use DateTime;
 
 class Validator
 {
+    /**
+     * @var array data to be validated
+     */
     protected $data = [];
+
+    /**
+     * @var array rules for validation
+     */
     protected $rules = [];
+
+    /**
+     * @var array errors for validation result
+     */
     protected $errors = [];
+
+    /**
+     * @var object model for which data to be validated
+     */
     protected $model;
 
+    /**
+     * instantiate validator class
+     * @param array 
+     * @param array
+     * @param object
+     */
     public function __construct(array $data, array $rules, $model = null)
     {
         $this->data = $data;
@@ -18,7 +39,10 @@ class Validator
         $this->model = $model;
     }
 
-    public function validate()
+    /**
+     * Validates given field according to rule
+     */
+    public function validate(): bool
     {
         foreach ($this->rules as $field => $rules) {
             $rulesArray = explode('|', $rules);
@@ -37,52 +61,85 @@ class Validator
         return empty($this->errors);
     }
 
-    public function errors()
+    /**
+     * returns all errors obtained after validation
+     */
+    public function errors(): array
     {
         return $this->errors;
     }
 
-    protected function addError($field, $message)
+    /**
+     * add validation error in the list
+     */
+    protected function addError($field, $message): void
     {
         $this->errors[$field][] = $message;
     }
 
-    protected function validateRequired($field)
+    /**
+     * validation for required rule
+     * @param string
+     */
+    protected function validateRequired($field): void
     {
         if (empty($this->data[$field])) {
             $this->addError($field, ucfirst($field) . " is required.");
         }
     }
 
-    protected function validateEmail($field)
+    /**
+     * validation for email rule
+     * @param string
+     */
+    protected function validateEmail($field): void
     {
         if (!filter_var($this->data[$field], FILTER_VALIDATE_EMAIL)) {
             $this->addError($field, ucfirst($field) . " must be a valid email.");
         }
     }
 
-    protected function validateMin($field, $min)
+    /**
+     * validation for min rule
+     * @param string
+     * @param string|int
+     */
+    protected function validateMin($field, $min): void
     {
         if (strlen($this->data[$field]) < $min) {
             $this->addError($field, ucfirst($field) . " must be at least $min characters.");
         }
     }
 
-    protected function validateMax($field, $max)
+    /**
+     * validation for max rule
+     * @param string
+     * @param string|int
+     */
+    protected function validateMax($field, $max): void
     {
         if (strlen($this->data[$field]) > $max) {
             $this->addError($field, ucfirst($field) . " must be less than $max characters.");
         }
     }
 
-    protected function validateNumeric($field)
+    /**
+     * validation for numeric rule
+     * @param string
+     */
+    protected function validateNumeric($field): void
     {
         if (!is_numeric($this->data[$field])) {
             $this->addError($field, ucfirst($field) . " must be a number.");
         }
     }
 
-    protected function validateBefore($field, $date)
+    /**
+     * validation for before rule
+     * @param string
+     * @param string
+     */
+    protected function validateBefore($field, $date): void
     {
         $inputDate = new DateTime($this->data[$field]);
         if($date == 'today')
@@ -95,7 +152,12 @@ class Validator
         }
     }
 
-    protected function validateAfter($field, $date)
+    /**
+     * validation for after rule
+     * @param string
+     * @param string
+     */
+    protected function validateAfter($field, $date): void
     {
         $inputDate = new DateTime($this->data[$field]);
         if($date == 'today')
@@ -108,7 +170,12 @@ class Validator
         }
     }
 
-    protected function validateUnique($field, $params)
+    /**
+     * validation for unique rule
+     * @param string
+     * @param string
+     */
+    protected function validateUnique($field, $params): void
     {
         if ($this->model) {
             list($table, $column, $ignoreColumn, $ignore) = explode(',', $params);
@@ -127,7 +194,12 @@ class Validator
         }
     }
 
-    protected function validateIn($field, $values)
+    /**
+     * validation for in rule
+     * @param string
+     * @param string
+     */
+    protected function validateIn($field, $values): void
     {
         $allowedValues = explode(',', $values);
         if (!in_array($this->data[$field], $allowedValues)) {
@@ -135,7 +207,12 @@ class Validator
         }
     }
 
-    protected function validateExists($field, $tableColumn)
+    /**
+     * validation for exists rule
+     * @param string
+     * @param string
+     */
+    protected function validateExists($field, $tableColumn): void
     {
         if ($this->model) {
             list($table, $column) = explode(',', $tableColumn);
