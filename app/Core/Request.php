@@ -70,8 +70,13 @@ class Request
      */
     public static function getAuthSession()
     {
-        $jwt_token = self::getAuthToken();
-        $payload = Jwt::decode($jwt_token, new Key(Config::jwt('secret'), Config::jwt('algorithm')));
-        return $payload->session;
+        try {
+
+            $jwt_token = self::getAuthToken();
+            $payload = Jwt::decode($jwt_token, new Key(Config::jwt('secret'), Config::jwt('algorithm')));
+            return $payload->session;
+        } catch(Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 }
