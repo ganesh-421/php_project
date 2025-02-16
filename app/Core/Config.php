@@ -7,8 +7,9 @@ class Config
     /**
      * configs related to database
      * @param string key
+     * allowed keys: [name, user, password, host]
      */
-    public static function database($key)
+    public static function database($key): string
     {
         switch($key)
         {
@@ -26,8 +27,9 @@ class Config
     /**
      * configs related to jwt 
      * @param string key
+     * allowed keys: [secret, algorithm]
      */
-    public static function jwt($key)
+    public static function jwt($key): string
     {
         switch($key)
         {
@@ -42,7 +44,8 @@ class Config
      * get value for provided key from .env
      * @param string key
      */
-    private static function getEnvValue($key) {
+    private static function getEnvValue($key): string|null
+    {
         $envFile = __DIR__ . '/../../.env';
         if (!file_exists($envFile)) {
             return null;
