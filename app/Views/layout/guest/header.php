@@ -19,3 +19,16 @@
             <span class="font-medium">Success!</span> <?php echo $_SESSION['success']; ?>
         </div>
     <?php } unset($_SESSION['success'])?>
+
+    <?php if($_SESSION['errors']) { ?>
+        <div class="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg" role="alert">
+            <ul>
+                <?php foreach ($_SESSION['errors'] as $field => $messages) { ?>
+                    <?php foreach ($messages as $message) { ?>
+                        <li> <span class="font-medium"><?= ucwords($field) ?>:</span> <?= $message; ?>.</li>
+                        <hr>
+                    <?php } ?>
+                <?php } ?>
+            </ul>
+        </div>
+    <?php } unset($_SESSION['errors']) ?>

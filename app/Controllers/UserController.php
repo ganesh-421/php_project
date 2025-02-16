@@ -41,7 +41,7 @@ class UserController
                 "dob" => 'required|before:today',
                 "gender" => 'required|in:m,f,o',
                 "address" => 'required|min:3|max:255',
-                "role" => 'required|in:super_admin,admin,artist',
+                "role" => 'required|in:super_admin,artist_manager,artist',
             ];
             $data = [
                 "first_name" => $_POST['first_name'],
@@ -94,17 +94,17 @@ class UserController
                 "last_name" => 'min:3|max:255',
                 "email" => 'required|email|unique:user,email,id,' . $id,
                 "password" => 'min:8|max:15',
-                "phone" => 'min:10|max:10|unique:user,phone',
+                "phone" => 'min:10|max:10|unique:user,phone,id,' . $id,
                 "dob" => 'before:today',
                 "gender" => 'in:m,f,o',
                 "address" => 'min:3|max:255',
-                "role" => 'in:super_admin,admin,artist',
+                "role" => 'in:super_admin,artist_manager,artist',
             ];
             $data = [
                 "first_name" => $_POST['first_name'],
                 "last_name" => $_POST['last_name'],
                 "email" => $_POST['email'],
-                "password" => password_hash($_POST['password'], PASSWORD_DEFAULT),
+                "password" => $_POST['password'],
                 "phone" => $_POST['phone'],
                 "dob" => $_POST['dob'],
                 "gender" => $_POST['gender'],
@@ -114,7 +114,7 @@ class UserController
             ];
 
             $validator = new Validator($data, $rules, (new User()));
-            
+
             if(!$validator->validate()) {
                 $errors = $validator->errors();
                 $_SESSION['errors'] = $errors;
