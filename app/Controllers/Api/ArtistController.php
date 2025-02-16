@@ -100,7 +100,7 @@ class ArtistController extends BaseApiController
             "dob" => 'before:today',
             "gender" => 'in:m,f,o',
             "address" => 'min:3|max:255',
-            'first_release_year' => 'min:4|numeric|before:today',
+            'first_release_year' => 'min:4|numeric',
             'no_of_albums_released' => 'numeric',
         ];
         $data = [

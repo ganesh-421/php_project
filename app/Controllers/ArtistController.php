@@ -108,8 +108,8 @@ class ArtistController
                 "dob" => 'before:today',
                 "gender" => 'in:m,f,o',
                 "address" => 'min:3|max:255',
-                'first_release_year' => 'min:4|numeric|before:today',
-                'no_of_albums' => 'numeric',
+                'first_release_year' => 'min:4|numeric',
+                'no_of_albums_released' => 'numeric',
             ];
     
             $data = [
@@ -118,7 +118,7 @@ class ArtistController
                 "gender" => $_POST['gender'],
                 "address" => $_POST['address'],
                 'first_release_year' => $_POST['first_release_year'],
-                'no_of_albums' => $_POST['no_of_albums'],
+                'no_of_albums_released' => $_POST['no_of_albums_released'],
                 "updated_at" => date('Y-m-d H:i:s'),
             ];
     

@@ -19,13 +19,15 @@ class AuthController extends BaseApiController
      */
     public function login()
     {
+        $vars = file_get_contents("php://input");
+        $post_vars = json_decode($vars, true);
         $rules = [
             'email' => "required|email|exists:user,email",
             'password' => 'required'
         ];
         $data = [
-            'email' => $_POST['email'],
-            'password' => $_POST['password']
+            'email' => $post_vars['email'],
+            'password' => $post_vars['password']
         ];
 
         $validator = new Validator($data, $rules, new User());
@@ -35,16 +37,14 @@ class AuthController extends BaseApiController
             return $this->sendError("Validation Error", 422, $errors);
         }
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $user_id = $this->repository->login($_POST['email'], $_POST['password']);
-            if($user_id)
-            {
-                $token = $this->repository->model->createToken($user_id);
-                $this->sendSuccess(['token' => $token], "Succesfully Logged In");
-            } else {
-                $this->sendError("Authentication Failed");
-            }
-        } 
+        $user_id = $this->repository->login($post_vars['email'], $post_vars['password']);
+        if($user_id)
+        {
+            $token = $this->repository->model->createToken($user_id);
+            $this->sendSuccess(['token' => $token], "Succesfully Logged In");
+        } else {
+            $this->sendError("Authentication Failed");
+        }
     }
 
     public function register()
