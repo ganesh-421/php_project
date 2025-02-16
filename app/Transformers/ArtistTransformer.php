@@ -2,7 +2,9 @@
 
 namespace App\Transformers;
 
-class UserTransformer
+use App\Models\User;
+
+class ArtistTransformer
 {
     /**
      * @var array resource
@@ -14,15 +16,18 @@ class UserTransformer
      */
     public static function transformItem(array $item): array
     {
+        $user = (new User())->find($item['user_id']);
         return [
             'id' => (int) $item['id'],
-            'name' => $item['first_name'] . " " . $item['last_name'],
-            'email' => $item['email'],
-            'role' => $item['role'],
+            'name' => $item['name'],
+            'email' => $user['email'],
+            'role' => $user['role'],
             'dob' => $item['dob'],
             'gender' => $item['gender'],
             'address' => $item['address'],
-            'phone' => $item['phone'],
+            'first_release_year' => $item['first_release_year'],
+            'no_of_albums' => $item['no_of_albums'],
+            'phone' => $user['phone'],
         ];
     }
 

@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use App\Core\Config;
-use App\Core\Jwt\Jwt;
-use App\Core\Jwt\Key;
 use App\Core\Request;
 
 class Session extends BaseModel
 {
+    /**
+     * initializes class 
+     */
     public function __construct()
     {
         parent::__construct();
@@ -16,15 +16,26 @@ class Session extends BaseModel
         $this->table = "session";
     }
 
+    /**
+     * get currently active session detail
+     */
     public function current()
     {
-        $token = $_SESSION['token'];
-        $query = "SELECT * FROM `session` WHERE `session`.`token`=?";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute([$token]);
-        return $stmt->fetch();
+        if(!Request::expectJson())
+        {
+            $token = $_SESSION['token'];
+            $result = $this->findBy('token', $token);
+            return $result[0];
+        } else {
+            $token = Request::getAuthSession();
+            $result = $this->findBy('token', $token);
+            return $result[0];
+        }
     }
 
+    /**
+     * get currently authenticated user
+     */
     public function auth()
     {
         if(!Request::expectJson())
@@ -37,6 +48,10 @@ class Session extends BaseModel
         }
     }
 
+    /**
+     * get user associated with this session token
+     * @param string
+     */
     public function user($token)
     {
         $query = "SELECT `user`.* FROM `user` INNER JOIN `session` ON `user`.`id` = `session`.`user_id` WHERE `session`.`token`=?";
@@ -45,11 +60,17 @@ class Session extends BaseModel
         return $stmt->fetch();
     }
 
+    /**
+     * get role of currently authenticated user
+     */
     public function role()
     {
         return $this->auth()['role'];
     }
 
+    /**
+     * get fullname of currently authenticated user
+     */
     public function name()
     {
         $user = $this->auth();

@@ -2,7 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Core\Validator;
 use App\Models\Session;
+use App\Models\User;
 use App\Repositories\AuthRepository;
 
 class UserController
@@ -30,6 +32,17 @@ class UserController
     public function create()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $rules = [
+                "first_name" => 'required|min:3|max:255',
+                "last_name" => 'required|min:3|max:255',
+                "email" => 'required|email|unique:user,email',
+                "password" => 'required|min:8|max:15',
+                "phone" => 'required|min:10|max:10|unique:user,phone',
+                "dob" => 'required|before:today',
+                "gender" => 'required|in:m,f,o',
+                "address" => 'required|min:3|max:255',
+                "role" => 'required|in:super_admin,admin,artist',
+            ];
             $data = [
                 "first_name" => $_POST['first_name'],
                 "last_name" => $_POST['last_name'],
@@ -43,6 +56,13 @@ class UserController
                 "created_at" => date('Y-m-d H:i:s'),
                 "updated_at" => date('Y-m-d H:i:s'),
             ];
+            $validator = new Validator($data, $rules, (new User()));
+            if(!$validator->validate()) {
+                $errors = $validator->errors();
+                $_SESSION['errors'] = $errors;
+                header("Location: /create/user");
+                exit;
+            }
             $result = $this->repository->register($data);
             if($result) {
                 $_SESSION['success'] = "User Created Succesfully";
@@ -61,7 +81,25 @@ class UserController
     public function edit()
     {
         $id = $_REQUEST['user_id'];
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $user = (new User())->find($id);
+        if(empty($user))
+        {
+            $_SESSION['error'] = "User Not Found";
+            header("Location: /users");
+            exit;
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') { 
+            $rules = [
+                "first_name" => 'min:3|max:255',
+                "last_name" => 'min:3|max:255',
+                "email" => 'required|email|unique:user,email,id,' . $id,
+                "password" => 'min:8|max:15',
+                "phone" => 'min:10|max:10|unique:user,phone',
+                "dob" => 'before:today',
+                "gender" => 'in:m,f,o',
+                "address" => 'min:3|max:255',
+                "role" => 'in:super_admin,admin,artist',
+            ];
             $data = [
                 "first_name" => $_POST['first_name'],
                 "last_name" => $_POST['last_name'],
@@ -74,6 +112,16 @@ class UserController
                 "role" => $_POST['role'],
                 "updated_at" => date('Y-m-d H:i:s'),
             ];
+
+            $validator = new Validator($data, $rules, (new User()));
+            
+            if(!$validator->validate()) {
+                $errors = $validator->errors();
+                $_SESSION['errors'] = $errors;
+                header("Location: /update/user?user_id=".$id);
+                exit;
+            }
+
             $result = $this->repository->edit($id, $data);
             if($result)
             {
@@ -93,13 +141,21 @@ class UserController
 
     public function delete()
     {
+        $id = $_REQUEST['user_id'];
+        $user = (new User())->find($id);
+        if(empty($user))
+        {
+            $_SESSION['error'] = "User Not Found";
+            header("Location: /users");
+            exit;
+        }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if((new Session())->auth()['id'] == $_POST['user_id']) {
+            if((new Session())->auth()['id'] == $id) {
                 $_SESSION['error'] = "Users Shouldn't delete themselves";
                 header("Location: /users");
                 exit;
             }
-            $result = $this->repository->delete($_POST['user_id']);
+            $result = $this->repository->delete($id);
             if($result) {
                 $_SESSION['success'] = "User deleted succesfully";
                 header("Location: /users");

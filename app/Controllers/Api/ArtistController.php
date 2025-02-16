@@ -1,33 +1,38 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Api;
 
 use App\Core\Validator;
 use App\Models\Artist;
 use App\Models\Session;
 use App\Repositories\ArtistRepository;
+use App\Transformers\ArtistTransformer;
 
-class ArtistController
+class ArtistController extends BaseApiController
 {
     private $repository;
     public function __construct()
     {
         if(!(((new Session())->role() != 'artist_manager') || ((new Session())->role() != 'super_admin')))
         {
-            $_SESSION['error'] = "Unauthorized.";
-            header("Location: /");
+            return $this->sendError("Unauthorized", 403);
         }
         $this->repository = new ArtistRepository();
     }
     public function index()
     {
         $page = isset($_GET['page']) ? $_GET['page'] : 1;
-        $artists = $this->repository->paginated($page, 5);
-        require_once __DIR__ . '/../Views/auth/artist/index.php';
+        $artists = ArtistTransformer::transformPaginated($this->repository->paginated($page, 5));
+        return $this->sendSuccess($artists, "List Of Artist");
     }
 
     public function create()
     {
+        if(((new Session())->role() != 'artist_manager'))
+        {
+            $_SESSION['error'] = "Unauthorized.";
+            header("Location: /");
+        }
         $rules = [
             "first_name" => 'required|min:3|max:255',
             "last_name" => 'required|min:3|max:255',
@@ -60,47 +65,32 @@ class ArtistController
         $validator = new Validator($data, $rules, (new Artist()));
         if(!$validator->validate()) {
             $errors = $validator->errors();
-            $_SESSION['errors'] = $errors;
-            header("Location: /create/artist");
-            exit;
+            return $this->sendError("Validation Error", 422, $errors);
         }
 
-        if(((new Session())->role() != 'artist_manager'))
+        $result = $this->repository->add($data);
+        if($result) 
         {
-            $_SESSION['error'] = "Unauthorized.";
-            header("Location: /");
-        }
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $result = $this->repository->add($data);
-            if($result) 
-            {
-                $_SESSION['success'] = "Artist Added Succesfully";
-                header("Location: /artists");
-                exit;
-            } else {
-                // $_SESSION['error'] = "Artist Couldn't be Added";
-                header("Location: /create/artist");
-                exit;
-            }
+            return $this->sendSuccess([], "Artist Added Succesfully");
         } else {
-            require_once __DIR__ . '/../Views/auth/artist/create.php';
+            return $this->sendError("Artist Couldn't Be Added");
         }
     }
 
     public function edit()
     {
-        $id = $_REQUEST['artist_id'];
+        $vars = file_get_contents("php://input");
+        $post_vars = json_decode($vars, true);
+        $id = $post_vars['artist_id'];
         $artist = (new Artist())->find($id);
+
         if(empty($artist))
         {
-            $_SESSION['error'] = "Artist Not Found";
-            header("Location: /artists");
-            exit;
+            return $this->sendError("Artist Not Found", 404);
         }
         if(((new Session())->role() != 'artist_manager'))
         {
-            $_SESSION['error'] = "Unauthorized.";
-            header("Location: /");
+            return $this->sendError("Unauthorized", 403);
         }
 
         $rules = [
@@ -111,66 +101,47 @@ class ArtistController
             'first_release_year' => 'min:4|numeric|before:today',
             'no_of_albums' => 'numeric',
         ];
-
         $data = [
-            "name" => $_POST['name'] ,
-            "dob" => $_POST['dob'],
-            "gender" => $_POST['gender'],
-            "address" => $_POST['address'],
-            'first_release_year' => $_POST['first_release_year'],
-            'no_of_albums' => $_POST['no_of_albums'],
+            "name" => $post_vars['name'] ,
+            "dob" => $post_vars['dob'],
+            "gender" => $post_vars['gender'],
+            "address" => $post_vars['address'],
+            'first_release_year' => $post_vars['first_release_year'],
+            'no_of_albums' => $post_vars['no_of_albums'],
             "updated_at" => date('Y-m-d H:i:s'),
         ];
 
         $validator = new Validator($data, $rules, (new Artist()));
-            
         if(!$validator->validate()) {
             $errors = $validator->errors();
-            $_SESSION['errors'] = $errors;
-            header("Location: /update/artist?artist_id=".$id);
-            exit;
+            return $this->sendError("Validation Error", 422, $errors);
         }
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $result = $this->repository->update($id, $data);
-            if($result) 
-            {
-                $_SESSION['success'] = "Artist Updated Succesfully";
-                header("Location: /artists");
-                exit;
-            } else {
-                $_SESSION['error'] = "Artist Couldn't be Updated";
-                header("Location: /update/artist?artist_id=".$id);
-                exit;
-            }
+        
+        $result = $this->repository->update($id, $data);
+        if($result) 
+        {
+            return $this->sendSuccess([], "Artist Updated Succesfully");
         } else {
-            $artist = $this->repository->findBy(['id' => $id])[0];
-            require_once __DIR__ . '/../Views/auth/artist/edit.php';
+            return $this->sendError("Artist Couldn't be Updated");
         }
     }
 
     public function delete()
     {
-        $id = $_REQUEST['artist_id'];
+        $vars = file_get_contents("php://input");
+        $post_vars = json_decode($vars, true);
+        $id = $post_vars['artist_id'];
         $artist = (new Artist())->find($id);
         if(empty($artist))
         {
-            $_SESSION['error'] = "Artist Not Found";
-            header("Location: /artists");
-            exit;
+            return $this->sendError("Artist Not Found", 404);
         }
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $result = $this->repository->delete($id);
-            if($result) 
-            {
-                $_SESSION['success'] = "Artist deleted succesfully";
-                header("Location: /artists");
-                exit;
-            } else {
-                $_SESSION['error'] = "Artist Couldn't be deleted";
-                header("Location: /artists");
-                exit;
-            }
+        $result = $this->repository->delete($_POST['artist_id']);
+        if($result) 
+        {
+            return $this->sendSuccess([], "Artist Deleted Succesfully");
+        } else {
+            return $this->sendError("Artist Couldn't be Deleted");
         }
     }
 
@@ -182,8 +153,7 @@ class ArtistController
 
         
         if (!file_exists($file)) {
-            $_SESSION['error'] = "Failed to export records.";
-            return;
+            return $this->sendError("Artist Couldn't be Exported");
         }
 
         header('Content-Type: application/octet-stream');
@@ -191,8 +161,7 @@ class ArtistController
         header('Content-Length: ' . filesize($file));
         
         readfile($file);
-        $_SESSION['success'] = "All Records Exported";
-        exit();
+        $this->sendSuccess([], "Artist Exported");
     }
 
     public function importCsv()
@@ -202,33 +171,21 @@ class ArtistController
             
             $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
             if (strtolower($extension) !== 'csv') {
-                $_SESSION['error'] = "Only csv are valid.";
-                unset($_SESSION['success']);
-                header("Location: /artists");
-                exit;
+                return $this->sendError("Only CSV file are valid");
             }
             
             if ($file['error'] !== UPLOAD_ERR_OK) {
-                $_SESSION['error'] = "Error while file upload.";
-                unset($_SESSION['success']);
-                header("Location: /artists");
-                exit;
+                return $this->sendError("Error While Uploading");
             }
             
             $result = $this->repository->import($file);
             if(!$result)
             {
-                $_SESSION['error'] = "Import Failed";
-                header("Location: /artists");
-                exit;
+                return $this->sendError("Artist Couldn't be Imported");
             }
-            $_SESSION['success'] = "Succesfully Imported";
-            header("Location: /artists");
-            exit;
+            return $this->sendSuccess([], "Artist Imported Successfully");
         } else {
-            $_SESSION['success'] = "No file uploaded.";
-            header("Location: /artists");
-            exit;
+            return $this->sendError("File not uploaded");
         }
     }
 }

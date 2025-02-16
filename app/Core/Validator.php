@@ -108,11 +108,18 @@ class Validator
         }
     }
 
-    protected function validateUnique($field, $table)
+    protected function validateUnique($field, $params)
     {
         if ($this->model) {
-            $stmt = $this->model->db->prepare("SELECT COUNT(*) FROM $table WHERE $field = ?");
-            $stmt->execute([$this->data[$field]]);
+            list($table, $column, $ignoreColumn, $ignore) = explode(',', $params);
+            if(!empty($ignoreColumn) && !empty($ignore))
+            {
+                $stmt = $this->model->db->prepare("SELECT COUNT(*) FROM $table WHERE $field = ? AND $ignoreColumn <> ?");
+                $stmt->execute([$this->data[$field], $ignore]);
+            } else {
+                $stmt = $this->model->db->prepare("SELECT COUNT(*) FROM $table WHERE $field = ?");
+                $stmt->execute([$this->data[$field]]);
+            }
             $count = $stmt->fetchColumn();
             if ($count > 0) {
                 $this->addError($field, ucfirst($field) . " already exists.");
