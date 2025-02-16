@@ -30,6 +30,8 @@ class UserController extends BaseApiController
 
     public function create()
     {
+        $vars = file_get_contents("php://input");
+        $post_vars = json_decode($vars, true);
         $rules = [
             "first_name" => 'required|min:3|max:255',
             "last_name" => 'required|min:3|max:255',
@@ -39,18 +41,18 @@ class UserController extends BaseApiController
             "dob" => 'required|before:today',
             "gender" => 'required|in:m,f,o',
             "address" => 'required|min:3|max:255',
-            "role" => 'required|in:super_admin,admin,artist',
+            "role" => 'required|in:super_admin,artist_manager,artist',
         ];
         $data = [
-            "first_name" => $_POST['first_name'],
-            "last_name" => $_POST['last_name'],
-            "email" => $_POST['email'],
-            "password" => $_POST['password'],
-            "phone" => $_POST['phone'],
-            "dob" => $_POST['dob'],
-            "gender" => $_POST['gender'],
-            "address" => $_POST['address'],
-            "role" => $_POST['role'],
+            "first_name" => $post_vars['first_name'],
+            "last_name" => $post_vars['last_name'],
+            "email" => $post_vars['email'],
+            "password" => $post_vars['password'],
+            "phone" => $post_vars['phone'],
+            "dob" => $post_vars['dob'],
+            "gender" => $post_vars['gender'],
+            "address" => $post_vars['address'],
+            "role" => $post_vars['role'],
             "created_at" => date('Y-m-d H:i:s'),
             "updated_at" => date('Y-m-d H:i:s'),
         ];
@@ -101,7 +103,7 @@ class UserController extends BaseApiController
             "dob" => 'before:today',
             "gender" => 'in:m,f,o',
             "address" => 'min:3|max:255',
-            "role" => 'in:super_admin,admin,artist',
+            "role" => 'in:super_admin,artist_manager,artist',
         ];
         
         $validator = new Validator($data, $rules, (new User()));
