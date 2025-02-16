@@ -14,7 +14,7 @@
                 </span>
             </li>
             <li class="flex cursor-pointer items-center text-sm text-slate-500 transition-colors duration-300 hover:text-slate-800">
-                <a href="/edit/artist">Exit</a>
+                <a href="/edit/artist">Edit</a>
                 <span class="pointer-events-none mx-2 text-slate-800">
                     /
                 </span>

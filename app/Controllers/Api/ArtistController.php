@@ -28,6 +28,8 @@ class ArtistController extends BaseApiController
 
     public function create()
     {
+        $vars = file_get_contents("php://input");
+        $post_vars = json_decode($vars, true);
         if(((new Session())->role() != 'artist_manager'))
         {
             $_SESSION['error'] = "Unauthorized.";
@@ -43,21 +45,21 @@ class ArtistController extends BaseApiController
             "gender" => 'required|in:m,f,o',
             "address" => 'required|min:3|max:255',
             "role" => 'required|in:super_admin,admin,artist',
-            'first_release_year' => 'required|min:4|numeric|before:today',
-            'no_of_albums' => 'required|numeric',
+            'first_release_year' => 'required|min:4|numeric',
+            'no_of_albums_released' => 'required|numeric',
         ];
         $data = [
-            "first_name" => $_POST['first_name'],
-            "last_name" => $_POST['last_name'],
-            "email" => $_POST['email'],
-            "password" => $_POST['password'],
-            "phone" => $_POST['phone'],
-            "dob" => $_POST['dob'],
-            "gender" => $_POST['gender'],
-            "address" => $_POST['address'],
+            "first_name" => $post_vars['first_name'],
+            "last_name" => $post_vars['last_name'],
+            "email" => $post_vars['email'],
+            "password" => $post_vars['password'],
+            "phone" => $post_vars['phone'],
+            "dob" => $post_vars['dob'],
+            "gender" => $post_vars['gender'],
+            "address" => $post_vars['address'],
             "role" => 'artist',
-            'first_release_year' => $_POST['first_release_year'],
-            'no_of_albums' => $_POST['no_of_albums'],
+            'first_release_year' => $post_vars['first_release_year'],
+            'no_of_albums_released' => $post_vars['no_of_albums_released'],
             "created_at" => date('Y-m-d H:i:s'),
             "updated_at" => date('Y-m-d H:i:s'),
         ];
@@ -99,7 +101,7 @@ class ArtistController extends BaseApiController
             "gender" => 'in:m,f,o',
             "address" => 'min:3|max:255',
             'first_release_year' => 'min:4|numeric|before:today',
-            'no_of_albums' => 'numeric',
+            'no_of_albums_released' => 'numeric',
         ];
         $data = [
             "name" => $post_vars['name'] ,
@@ -107,7 +109,7 @@ class ArtistController extends BaseApiController
             "gender" => $post_vars['gender'],
             "address" => $post_vars['address'],
             'first_release_year' => $post_vars['first_release_year'],
-            'no_of_albums' => $post_vars['no_of_albums'],
+            'no_of_albums_released' => $post_vars['no_of_albums_released'],
             "updated_at" => date('Y-m-d H:i:s'),
         ];
 
