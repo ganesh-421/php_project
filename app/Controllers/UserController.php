@@ -11,6 +11,9 @@ class UserController
 {
     private $repository;
 
+    /**
+     * instantiate user controller
+     */
     public function __construct()
     {
         if((new Session)->role() !== 'super_admin')
@@ -22,13 +25,20 @@ class UserController
         $this->repository = new AuthRepository();
     }
 
+    /**
+     * list all the users
+     */
     public function index()
     {
         $page = isset($_GET['page']) ? $_GET['page'] : 1;
         $users = $this->repository->paginated($page, 5);
         require_once __DIR__ . '/../Views/auth/user/index.php';
+        exit;
     }
 
+    /**
+     * create a new user (post), create form (get)
+     */
     public function create()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -69,15 +79,18 @@ class UserController
                 header("Location: /users");
                 exit;
             } else {
-                // $_SESSION['error'] = "User Couldn't be Created";
                 header("Location: /create/user");
                 exit;
             }
         } else {
             require_once __DIR__ . '/../Views/auth/user/create.php';
+            exit;
         }
     }
 
+    /**
+     * update user (post), edit form (get)
+     */
     public function edit()
     {
         $id = $_REQUEST['user_id'];
@@ -129,16 +142,19 @@ class UserController
                 header("Location: /users");
                 exit;
             } else {
-                // $_SESSION['error'] = "User Couldn't be Updated";
                 header("Location: /update/user?user_id=".$id);
                 exit;
             }
         } else {
             $user = $this->repository->findBy(['id' => $id])[0];
             require_once __DIR__ . '/../Views/auth/user/edit.php';
+            exit;
         }
     }
 
+    /**
+     * delete user
+     */
     public function delete()
     {
         $id = $_REQUEST['user_id'];

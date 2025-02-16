@@ -9,11 +9,17 @@ use App\Repositories\AuthRepository;
 class AuthController
 {
     private $repository;
+    /**
+     * instantiate auth controller
+     */
     public function __construct()
     {
         $this->repository = new AuthRepository();
     }
 
+    /**
+     * logs the user into system (post), login form (get)
+     */
     public function login()
     {
         
@@ -47,9 +53,13 @@ class AuthController
             }
         } else {
             require_once __DIR__ . '/../Views/front/login.php';
+            exit;
         }
     }
 
+    /**
+     * register new user (post), register form (get)
+     */
     public function register()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -95,12 +105,17 @@ class AuthController
             }
         } else {
             require_once __DIR__ . '/../Views/front/register.php';
+            exit;
         }
     }
 
+    /**
+     * logs out the user
+     */
     public function logout()
     {
         $this->repository->logout();
         header("Location: /login");
+        exit;
     }
 }

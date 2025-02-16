@@ -10,6 +10,9 @@ use App\Repositories\ArtistRepository;
 class ArtistController
 {
     private $repository;
+    /**
+     * Instatiate controller
+     */
     public function __construct()
     {
         if(!(((new Session())->role() != 'artist_manager') || ((new Session())->role() != 'super_admin')))
@@ -19,19 +22,28 @@ class ArtistController
         }
         $this->repository = new ArtistRepository();
     }
+
+    /**
+     * list all artists
+     */
     public function index()
     {
         $page = isset($_GET['page']) ? $_GET['page'] : 1;
         $artists = $this->repository->paginated($page, 5);
         require_once __DIR__ . '/../Views/auth/artist/index.php';
+        exit;
     }
 
+    /**
+     * creates new artist (post), create form (get)
+     */
     public function create()
     {
         if(((new Session())->role() != 'artist_manager'))
         {
             $_SESSION['error'] = "Unauthorized.";
             header("Location: /");
+            exit;
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $rules = [
@@ -76,15 +88,18 @@ class ArtistController
                 header("Location: /artists");
                 exit;
             } else {
-                // $_SESSION['error'] = "Artist Couldn't be Added";
                 header("Location: /create/artist");
                 exit;
             }
         } else {
             require_once __DIR__ . '/../Views/auth/artist/create.php';
+            exit;
         }
     }
 
+    /**
+     * edit given artist provided that it exists (post), edit form (get)
+     */
     public function edit()
     {
         $id = $_REQUEST['artist_id'];
@@ -99,6 +114,7 @@ class ArtistController
         {
             $_SESSION['error'] = "Unauthorized.";
             header("Location: /");
+            exit;
         }
 
         
@@ -144,9 +160,13 @@ class ArtistController
         } else {
             $artist = $this->repository->findBy(['id' => $id])[0];
             require_once __DIR__ . '/../Views/auth/artist/edit.php';
+            exit;
         }
     }
 
+    /**
+     * delete given artist provided that it exists
+     */
     public function delete()
     {
         $id = $_REQUEST['artist_id'];
@@ -172,6 +192,9 @@ class ArtistController
         }
     }
 
+    /**
+     * export all artist reccords to csv file
+     */
     public function exportCsv()
     {
         $filename = "artists.csv";
@@ -181,7 +204,7 @@ class ArtistController
         
         if (!file_exists($file)) {
             $_SESSION['error'] = "Failed to export records.";
-            return;
+            exit;
         }
 
         header('Content-Type: application/octet-stream');
@@ -193,6 +216,9 @@ class ArtistController
         exit();
     }
 
+    /**
+     * import all artist from csv file. 
+     */
     public function importCsv()
     {
         if (isset($_FILES['csv_file'])) {
