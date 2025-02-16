@@ -93,14 +93,14 @@ class MusicController
     public function edit()
     {
         $id = $_REQUEST['music_id'];
-        if(!isset($id))
+        $music = (new Music())->find($id);
+        if(empty($music))
         {
-            $_SESSION['error'] = "Music Id Must Be Given";
+            $_SESSION['error'] = "Music Not Found";
             header("Location: /musics");
             exit;
         }
         $authUser = (new Session())->auth();
-        $music = (new Music())->find($id);
         $artist = (new Artist())->find($music['artist_id']);
 
         if($authUser['role'] != 'artist' || $authUser['id'] != $artist['user_id'])
@@ -160,14 +160,14 @@ class MusicController
     public function delete()
     {
         $id = $_REQUEST['music_id'];
-        if(!isset($id))
+        $music = (new Music())->find($id);
+        if(empty($music))
         {
-            $_SESSION['error'] = "Music Id Is Required";
+            $_SESSION['error'] = "Music Not Found";
             header("Location: /musics");
             exit;
         }
         $authUser = (((new Session())->auth()));
-        $music = (new Music())->find($id);
         $artist = (new Artist())->find($music['artist_id']);
         if($authUser['role'] != 'artist' || $authUser['id'] != $artist['user_id'])
         {

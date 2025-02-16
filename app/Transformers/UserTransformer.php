@@ -18,7 +18,11 @@ class UserTransformer
             'id' => (int) $item['id'],
             'name' => $item['first_name'] . " " . $item['last_name'],
             'email' => $item['email'],
-            'role' => $item['role']
+            'role' => $item['role'],
+            'dob' => $item['dob'],
+            'gender' => $item['gender'],
+            'address' => $item['address'],
+            'phone' => $item['phone'],
         ];
     }
 
