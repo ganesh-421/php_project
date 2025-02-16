@@ -8,7 +8,14 @@ use Exception;
 
 class Router
 {
+    /**
+     * @param array web routes with controller methods and middleware
+     */
     private static $routes = [];
+
+    /**
+     * @param array api routes with controller methods and middleware 
+     */
     private static $apiRoutes = [];
 
     /**
@@ -66,6 +73,9 @@ class Router
             self::$routes['DELETE'][$uri] = ['controller' => $controllerMethod, 'middleware' => $middleware];
     }
 
+    /**
+     * dispatch respective routes according to request
+     */
     public static function dispatch()
     {
         if(Request::expectJson())
@@ -74,6 +84,10 @@ class Router
             self::dispatchRoute(self::$routes);
     }
 
+    /**
+     * dispatch the routes given
+     * @param array routes
+     */
     private static function dispatchRoute($routes)
     {
         try {
