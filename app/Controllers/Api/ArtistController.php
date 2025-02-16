@@ -10,7 +10,14 @@ use App\Transformers\ArtistTransformer;
 
 class ArtistController extends BaseApiController
 {
+    /**
+     * @var \\App\\Repositories\\ArtistRepository
+     */
     private $repository;
+
+    /**
+     * instantiate artist controller
+     */
     public function __construct()
     {
         if(!(((new Session())->role() != 'artist_manager') || ((new Session())->role() != 'super_admin')))
@@ -19,6 +26,10 @@ class ArtistController extends BaseApiController
         }
         $this->repository = new ArtistRepository();
     }
+
+    /**
+     * returns paginated list of all artists
+     */
     public function index()
     {
         $page = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -26,6 +37,9 @@ class ArtistController extends BaseApiController
         return $this->sendSuccess($artists, "List Of Artist");
     }
 
+    /**
+     * validate and create new artist and related user
+     */
     public function create()
     {
         $vars = file_get_contents("php://input");
@@ -79,6 +93,9 @@ class ArtistController extends BaseApiController
         }
     }
 
+    /**
+     * validate and update existing artist detail
+     */
     public function edit()
     {
         $vars = file_get_contents("php://input");
@@ -128,6 +145,9 @@ class ArtistController extends BaseApiController
         }
     }
 
+    /**
+     * deletes artist
+     */
     public function delete()
     {
         $vars = file_get_contents("php://input");
@@ -147,6 +167,9 @@ class ArtistController extends BaseApiController
         }
     }
 
+    /**
+     * export artist detail to csv file
+     */
     public function exportCsv()
     {
         $filename = "artists.csv";
@@ -166,6 +189,9 @@ class ArtistController extends BaseApiController
         $this->sendSuccess([], "Artist Exported");
     }
 
+    /**
+     * import artist from csv file
+     */
     public function importCsv()
     {
         if (isset($_FILES['csv_file'])) {

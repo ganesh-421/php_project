@@ -8,14 +8,21 @@ use App\Repositories\AuthRepository;
 
 class AuthController extends BaseApiController
 {
+    /**
+     * @var \\App\\Repositories\\AuthRepository
+     */
     private $repository;
+
+    /**
+     * instantiate auth controller
+     */
     public function __construct()
     {
         $this->repository = new AuthRepository();
     }
 
     /**
-     * logs user into the system after verifying credentials
+     * validate and logs user into the system after verifying credentials
      */
     public function login()
     {
@@ -47,6 +54,9 @@ class AuthController extends BaseApiController
         }
     }
 
+    /**
+     * validate and register new user
+     */
     public function register()
     {
         $vars = file_get_contents("php://input");
@@ -60,7 +70,7 @@ class AuthController extends BaseApiController
             "dob" => 'required|before:today',
             "gender" => 'required|in:m,f,o',
             "address" => 'required|min:3|max:255',
-            "role" => 'required|in:super_admin,admin,artist',
+            "role" => 'required|in:super_admin,artist_manager,artist',
         ];
         $data = [
             "first_name" => $post_vars['first_name'],
@@ -89,6 +99,9 @@ class AuthController extends BaseApiController
         }
     }
 
+    /**
+     * logs user out
+     */
     public function logout()
     {
         $this->repository->logout();

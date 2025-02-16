@@ -11,11 +11,22 @@ use App\Transformers\MusicTransformer;
 
 class MusicController extends BaseApiController
 {
+    /**
+     * @var \\App\\Repositories\\MusicRepository
+     */
     private $repository;
+
+    /**
+     * instatiate the music controller
+     */
     public function __construct()
     {
         $this->repository = new MusicRepository();
     }
+
+    /**
+     * paginated list of all music (or music list for given artist) 
+     */
     public function index()
     {
         if(isset($_GET['artist_id']))
@@ -29,6 +40,9 @@ class MusicController extends BaseApiController
         }
     }
 
+    /**
+     * validate and create new music for given artist
+     */
     public function create()
     {
         $authUser = (((new Session())->auth()));
@@ -69,6 +83,9 @@ class MusicController extends BaseApiController
         }
     }
 
+    /**
+     * validate and update the detail of given music
+     */
     public function edit()
     {
         $vars = file_get_contents("php://input");
@@ -117,6 +134,9 @@ class MusicController extends BaseApiController
         }
     }
 
+    /**
+     * delete the given music
+     */
     public function delete()
     {
         $vars = file_get_contents("php://input");

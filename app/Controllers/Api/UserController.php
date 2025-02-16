@@ -10,8 +10,14 @@ use App\Transformers\UserTransformer;
 
 class UserController extends BaseApiController
 {
+    /**
+     * @var \\App\\Repositories\\AuthRepository
+     */
     private $repository;
 
+    /**
+     * instantiate user controller
+     */
     public function __construct()
     {
         if((new Session)->role() !== 'super_admin')
@@ -21,13 +27,19 @@ class UserController extends BaseApiController
         $this->repository = new AuthRepository();
     }
 
+    /**
+     * returns json response of paginated users list
+     */
     public function index()
     {
         $page = isset($_GET['page']) ? $_GET['page'] : 1;
         $users = UserTransformer::transformPaginated($this->repository->paginated($page, 5));
-        return $this->sendSuccess($users, "List Of Music");
+        return $this->sendSuccess($users, "List Of Users");
     }
 
+    /**
+     * validates and stores user detail obtained in json format
+     */
     public function create()
     {
         $vars = file_get_contents("php://input");
@@ -70,6 +82,9 @@ class UserController extends BaseApiController
         }
     }
 
+    /**
+     * validates and updates user detail obtained in json format
+     */
     public function edit()
     {
         $vars = file_get_contents("php://input");
@@ -121,6 +136,9 @@ class UserController extends BaseApiController
         }
     }
 
+    /**
+     * delete user record for given id 
+     */
     public function delete()
     {
         $vars = file_get_contents("php://input");
