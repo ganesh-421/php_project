@@ -35,7 +35,7 @@ class UserController
             $rules = [
                 "first_name" => 'required|min:3|max:255',
                 "last_name" => 'required|min:3|max:255',
-                "email" => $_POST['email'],
+                "email" => 'required|email|unique:user,email',
                 "password" => 'required|min:8|max:15',
                 "phone" => 'required|min:10|max:10|unique:user,phone',
                 "dob" => 'required|before:today',
@@ -92,7 +92,7 @@ class UserController
             $rules = [
                 "first_name" => 'min:3|max:255',
                 "last_name" => 'min:3|max:255',
-                "email" => $_POST['email'],
+                "email" => 'required|email|unique:user,email,id,' . $id,
                 "password" => 'min:8|max:15',
                 "phone" => 'min:10|max:10|unique:user,phone',
                 "dob" => 'before:today',

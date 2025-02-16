@@ -33,7 +33,7 @@ class UserController extends BaseApiController
         $rules = [
             "first_name" => 'required|min:3|max:255',
             "last_name" => 'required|min:3|max:255',
-            "email" => $_POST['email'],
+            "email" => 'required|email|unique:user,email',
             "password" => 'required|min:8|max:15',
             "phone" => 'required|min:10|max:10|unique:user,phone',
             "dob" => 'required|before:today',
@@ -70,7 +70,9 @@ class UserController extends BaseApiController
 
     public function edit()
     {
-        $id = $_REQUEST['user_id'];
+        $vars = file_get_contents("php://input");
+        $post_vars = json_decode($vars, true);
+        $id = $post_vars['user_id'];
         $user = (new User())->find($id);
         if(empty($user))
         {

@@ -71,7 +71,9 @@ class MusicController extends BaseApiController
 
     public function edit()
     {
-        $id = $_REQUEST['music_id'];
+        $vars = file_get_contents("php://input");
+        $post_vars = json_decode($vars, true);
+        $id = $post_vars['music_id'];
         $music = (new Music())->find($id);
         if(empty($music))
         {
