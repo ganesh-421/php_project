@@ -131,16 +131,14 @@ class UserController extends BaseApiController
         {
             return $this->sendError("User Not Found", 404);
         }
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if((new Session())->auth()['id'] == $id) {
-                return $this->sendError("User Mustn't Delete Themselves");
-            }
-            $result = $this->repository->delete($id);
-            if($result) {
-                return $this->sendSuccess([], "User Deleted Succesfully");
-            } else {
-                return $this->sendError("User Couldn't be Deleted");
-            }
+        if((new Session())->auth()['id'] == $id) {
+            return $this->sendError("User Mustn't Delete Themselves");
+        }
+        $result = $this->repository->delete($id);
+        if($result) {
+            return $this->sendSuccess([], "User Deleted Succesfully");
+        } else {
+            return $this->sendError("User Couldn't be Deleted");
         }
     }
 }
