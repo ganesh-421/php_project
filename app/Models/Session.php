@@ -41,8 +41,12 @@ class Session extends BaseModel
     {
         if(!Request::expectJson())
         {
-            $token = $_SESSION['token'];
-            return $this->user($token);
+            if(isset($_SESSION['token']))
+            {
+                $token = $_SESSION['token'];
+                return $this->user($token);
+            }
+            return false;
         } else {
             $token = Request::getAuthSession();
             return $this->user($token);

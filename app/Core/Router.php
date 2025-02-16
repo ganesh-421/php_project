@@ -3,6 +3,7 @@
 namespace App\Core;
 
 use App\Core\Exceptions\RouteNotFoundException;
+use App\Core\Ratelimits\RateLimiter;
 use BadMethodCallException;
 use Exception;
 
@@ -78,6 +79,26 @@ class Router
      */
     public static function dispatch()
     {
+        $limiter = new RateLimiter();
+
+        if(!$limiter->isAllowed())
+        {
+            if(Request::expectJson())
+            {
+                header('Content-Type: application/json');
+                http_response_code(429);
+                echo json_encode([
+                    'success' => false,
+                    'message' => "Too Many Requests"
+                ]);
+                exit;
+            } else {
+                http_response_code(429);
+                $_SESSION['error'] = "Too Many Requests";
+                exit;
+            }
+        }
+
         if(Request::expectJson())
             self::dispatchRoute(static::$apiRoutes);
         else 
