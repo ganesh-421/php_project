@@ -66,7 +66,7 @@ class Request
     }
 
     /**
-     * get authenticated session for api 
+     * get authenticated session token for api 
      */
     public static function getAuthSession()
     {

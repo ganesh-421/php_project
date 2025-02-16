@@ -71,13 +71,15 @@ class MusicController extends BaseApiController
 
     public function edit()
     {
-        $id = $_REQUEST['music_id'];
-        if(!isset($id))
+        $vars = file_get_contents("php://input");
+        $post_vars = json_decode($vars, true);
+        $id = $post_vars['music_id'];
+        $music = (new Music())->find($id);
+        if(empty($music))
         {
-            return $this->sendError("Music Id Is Required", 422);
+            return $this->sendError("Music Not Found", 404);
         }
         $authUser = (new Session())->auth();
-        $music = (new Music())->find($id);
         $artist = (new Artist())->find($music['artist_id']);
 
         if($authUser['role'] != 'artist' || $authUser['id'] != $artist['user_id'])
@@ -120,13 +122,15 @@ class MusicController extends BaseApiController
 
     public function delete()
     {
-        $id = $_REQUEST['music_id'];
-        if(!isset($id))
+        $vars = file_get_contents("php://input");
+        $post_vars = json_decode($vars, true);
+        $id = $post_vars['music_id'];
+        $music = (new Music())->find($id);
+        if(empty($music))
         {
-            return $this->sendError("Music Id Is Required", 422);
+            return $this->sendError("Music Not Found", 404);
         }
         $authUser = (new Session())->auth();
-        $music = (new Music())->find($id);
         $artist = (new Artist())->find($music['artist_id']);
         if($authUser['role'] != 'artist' || $authUser['id'] != $artist['user_id'])
         {

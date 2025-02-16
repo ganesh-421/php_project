@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Core\Validator;
 use App\Models\Artist;
 use App\Models\Music;
 use App\Models\Session;
@@ -38,7 +39,15 @@ class MusicController
             {
                 $_SESSION['error'] = "Unauthorized.";
                 header("Location: /");
+                exit;
             }
+            $rules = [
+                'artist_id' => 'required|exists:artist,id',
+                'title' => 'required|max:255|min:3',
+                'album_name' => 'required|max:255|min:3',
+                'genre' => 'required|in:rnb,country,classic,rock,jazz'
+            ];
+    
             $data = [
                 "artist_id" => $_REQUEST['artist_id'],
                 "title" => $_POST['title'],
@@ -47,6 +56,16 @@ class MusicController
                 "created_at" => date('Y-m-d H:i:s'),
                 "updated_at" => date('Y-m-d H:i:s'),
             ];
+    
+            $validator = new Validator($data, $rules, (new Music()));
+    
+            if(!$validator->validate()) {
+                $errors = $validator->errors();
+                $_SESSION['errors'] = $errors;
+                header("Location: /create/music");
+                exit;
+            }
+
             $result = $this->repository->add($data);
             if($result) 
             {
@@ -63,6 +82,7 @@ class MusicController
             {
                 $_SESSION['error'] = "Unauthorized.";
                 header("Location: /");
+                exit;
             }
             $artist = (new Artist())->findBy('user_id', $authUser['id'])[0];
             $genres = ['rnb', 'country', 'classic', 'rock', 'jazz'];
@@ -73,8 +93,14 @@ class MusicController
     public function edit()
     {
         $id = $_REQUEST['music_id'];
-        $authUser = (new Session())->auth();
         $music = (new Music())->find($id);
+        if(empty($music))
+        {
+            $_SESSION['error'] = "Music Not Found";
+            header("Location: /musics");
+            exit;
+        }
+        $authUser = (new Session())->auth();
         $artist = (new Artist())->find($music['artist_id']);
 
         if($authUser['role'] != 'artist' || $authUser['id'] != $artist['user_id'])
@@ -83,6 +109,14 @@ class MusicController
             header("Location: /");
         }                     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            $rules = [
+                'artist_id' => 'exists:artist,id',
+                'title' => 'min:3|max:255',
+                'album_name' => 'min:3|max:255',
+                'genre' => 'in:rnb,country,classic,rock,jazz'
+            ];
+
             $data = [
                 "artist_id" => $_REQUEST['artist_id'],
                 "title" => $_POST['title'],
@@ -90,6 +124,16 @@ class MusicController
                 "genre" => $_POST['genre'],
                 "updated_at" => date('Y-m-d H:i:s'),
             ];
+            
+            $validator = new Validator($data, $rules, (new Music()));
+    
+            if(!$validator->validate()) {
+                $errors = $validator->errors();
+                $_SESSION['errors'] = $errors;
+                header("Location: /update/music?music_id=".$id);
+                exit;
+            }
+
             $result = $this->repository->update($id, $data);
             if($result) 
             {
@@ -116,10 +160,21 @@ class MusicController
 
     public function delete()
     {
-        if((new Session())->role() != 'artist')
+        $id = $_REQUEST['music_id'];
+        $music = (new Music())->find($id);
+        if(empty($music))
+        {
+            $_SESSION['error'] = "Music Not Found";
+            header("Location: /musics");
+            exit;
+        }
+        $authUser = (((new Session())->auth()));
+        $artist = (new Artist())->find($music['artist_id']);
+        if($authUser['role'] != 'artist' || $authUser['id'] != $artist['user_id'])
         {
             $_SESSION['error'] = "Unauthorized.";
             header("Location: /");
+            exit;
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result = $this->repository->delete($_POST['music_id']);

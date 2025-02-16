@@ -2,8 +2,6 @@
 
 namespace App\Controllers\Api;
 
-use App\Core\Config;
-use App\Core\Jwt\Jwt;
 use App\Core\Validator;
 use App\Models\User;
 use App\Repositories\AuthRepository;
@@ -51,24 +49,47 @@ class AuthController extends BaseApiController
 
     public function register()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $result = $this->repository->register($_POST);
-            if($result) {
-                $_SESSION['success'] = "Succesfully registered";
-                header("Location: /login");
-                exit;
-            } else {
-                header("Location: /register");
-                exit;
-            }
+        $rules = [
+            "first_name" => 'required|min:3|max:255',
+            "last_name" => 'required|min:3|max:255',
+            "email" => 'required|email|unique:user,email',
+            "password" => 'required|min:8|max:15',
+            "phone" => 'required|min:10|max:10|unique:user,phone',
+            "dob" => 'required|before:today',
+            "gender" => 'required|in:m,f,o',
+            "address" => 'required|min:3|max:255',
+            "role" => 'required|in:super_admin,admin,artist',
+        ];
+        $data = [
+            "first_name" => $_POST['first_name'],
+            "last_name" => $_POST['last_name'],
+            "email" => $_POST['email'],
+            "password" => $_POST['password'],
+            "phone" => $_POST['phone'],
+            "dob" => $_POST['dob'],
+            "gender" => $_POST['gender'],
+            "address" => $_POST['address'],
+            "role" => $_POST['role'],
+            "created_at" => date('Y-m-d H:i:s'),
+            "updated_at" => date('Y-m-d H:i:s'),
+        ];
+        $validator = new Validator($data, $rules, (new User()));
+        if(!$validator->validate()) {
+            $errors = $validator->errors();
+            return $this->sendError("Validation Error", 422, $errors);
+        }
+
+        $result = $this->repository->register($data);
+        if($result) {
+            return $this->sendSuccess([], "User Registered Succesfully");
         } else {
-            require_once __DIR__ . '/../Views/front/register.php';
+            return $this->sendError("User Couldn't Be Registered");
         }
     }
 
     public function logout()
     {
-        $this->repository->logout($_POST['email'], $_POST['password']);
-        header("Location: /login");
+        $this->repository->logout();
+        return $this->sendSuccess([], "User Logged Out Succesfully");
     }
 }
