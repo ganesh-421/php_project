@@ -107,6 +107,7 @@ class MusicController
         {
             $_SESSION['error'] = "Unauthorized.";
             header("Location: /");
+            exit;
         }                     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -124,7 +125,7 @@ class MusicController
                 "genre" => $_POST['genre'],
                 "updated_at" => date('Y-m-d H:i:s'),
             ];
-            
+
             $validator = new Validator($data, $rules, (new Music()));
     
             if(!$validator->validate()) {
@@ -150,6 +151,7 @@ class MusicController
             {
                 $_SESSION['error'] = "Unauthorized.";
                 header("Location: /");
+                exit;
             }
             $music = $this->repository->findBy(['id' => $id])[0];
             $artists = (new Artist())->all();

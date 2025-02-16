@@ -93,9 +93,6 @@ class MusicController extends BaseApiController
             'genre' => 'in:rnb,country,classic,rock,jazz'
         ];
 
-        $vars = file_get_contents("php://input");
-        $post_vars = json_decode($vars, true);
-
         $data = [
             "artist_id" => $_REQUEST['artist_id'] ?? $music['artist_id'],
             "title" => $post_vars['title'] ?? $music['title'],

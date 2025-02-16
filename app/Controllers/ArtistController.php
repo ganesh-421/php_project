@@ -201,14 +201,12 @@ class ArtistController
             $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
             if (strtolower($extension) !== 'csv') {
                 $_SESSION['error'] = "Only csv are valid.";
-                unset($_SESSION['success']);
                 header("Location: /artists");
                 exit;
             }
             
             if ($file['error'] !== UPLOAD_ERR_OK) {
                 $_SESSION['error'] = "Error while file upload.";
-                unset($_SESSION['success']);
                 header("Location: /artists");
                 exit;
             }
