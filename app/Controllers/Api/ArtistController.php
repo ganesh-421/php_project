@@ -10,7 +10,14 @@ use App\Transformers\ArtistTransformer;
 
 class ArtistController extends BaseApiController
 {
+    /**
+     * @var \\App\\Repositories\\ArtistRepository
+     */
     private $repository;
+
+    /**
+     * instantiate artist controller
+     */
     public function __construct()
     {
         if(!(((new Session())->role() != 'artist_manager') || ((new Session())->role() != 'super_admin')))
@@ -19,6 +26,10 @@ class ArtistController extends BaseApiController
         }
         $this->repository = new ArtistRepository();
     }
+
+    /**
+     * returns paginated list of all artists
+     */
     public function index()
     {
         $page = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -26,8 +37,13 @@ class ArtistController extends BaseApiController
         return $this->sendSuccess($artists, "List Of Artist");
     }
 
+    /**
+     * validate and create new artist and related user
+     */
     public function create()
     {
+        $vars = file_get_contents("php://input");
+        $post_vars = json_decode($vars, true);
         if(((new Session())->role() != 'artist_manager'))
         {
             $_SESSION['error'] = "Unauthorized.";
@@ -43,21 +59,21 @@ class ArtistController extends BaseApiController
             "gender" => 'required|in:m,f,o',
             "address" => 'required|min:3|max:255',
             "role" => 'required|in:super_admin,admin,artist',
-            'first_release_year' => 'required|min:4|numeric|before:today',
-            'no_of_albums' => 'required|numeric',
+            'first_release_year' => 'required|min:4|numeric',
+            'no_of_albums_released' => 'required|numeric',
         ];
         $data = [
-            "first_name" => $_POST['first_name'],
-            "last_name" => $_POST['last_name'],
-            "email" => $_POST['email'],
-            "password" => $_POST['password'],
-            "phone" => $_POST['phone'],
-            "dob" => $_POST['dob'],
-            "gender" => $_POST['gender'],
-            "address" => $_POST['address'],
+            "first_name" => $post_vars['first_name'],
+            "last_name" => $post_vars['last_name'],
+            "email" => $post_vars['email'],
+            "password" => $post_vars['password'],
+            "phone" => $post_vars['phone'],
+            "dob" => $post_vars['dob'],
+            "gender" => $post_vars['gender'],
+            "address" => $post_vars['address'],
             "role" => 'artist',
-            'first_release_year' => $_POST['first_release_year'],
-            'no_of_albums' => $_POST['no_of_albums'],
+            'first_release_year' => $post_vars['first_release_year'],
+            'no_of_albums_released' => $post_vars['no_of_albums_released'],
             "created_at" => date('Y-m-d H:i:s'),
             "updated_at" => date('Y-m-d H:i:s'),
         ];
@@ -77,6 +93,9 @@ class ArtistController extends BaseApiController
         }
     }
 
+    /**
+     * validate and update existing artist detail
+     */
     public function edit()
     {
         $vars = file_get_contents("php://input");
@@ -98,8 +117,8 @@ class ArtistController extends BaseApiController
             "dob" => 'before:today',
             "gender" => 'in:m,f,o',
             "address" => 'min:3|max:255',
-            'first_release_year' => 'min:4|numeric|before:today',
-            'no_of_albums' => 'numeric',
+            'first_release_year' => 'min:4|numeric',
+            'no_of_albums_released' => 'numeric',
         ];
         $data = [
             "name" => $post_vars['name'] ,
@@ -107,7 +126,7 @@ class ArtistController extends BaseApiController
             "gender" => $post_vars['gender'],
             "address" => $post_vars['address'],
             'first_release_year' => $post_vars['first_release_year'],
-            'no_of_albums' => $post_vars['no_of_albums'],
+            'no_of_albums_released' => $post_vars['no_of_albums_released'],
             "updated_at" => date('Y-m-d H:i:s'),
         ];
 
@@ -126,6 +145,9 @@ class ArtistController extends BaseApiController
         }
     }
 
+    /**
+     * deletes artist
+     */
     public function delete()
     {
         $vars = file_get_contents("php://input");
@@ -136,7 +158,7 @@ class ArtistController extends BaseApiController
         {
             return $this->sendError("Artist Not Found", 404);
         }
-        $result = $this->repository->delete($_POST['artist_id']);
+        $result = $this->repository->delete($id);
         if($result) 
         {
             return $this->sendSuccess([], "Artist Deleted Succesfully");
@@ -145,6 +167,9 @@ class ArtistController extends BaseApiController
         }
     }
 
+    /**
+     * export artist detail to csv file
+     */
     public function exportCsv()
     {
         $filename = "artists.csv";
@@ -164,6 +189,9 @@ class ArtistController extends BaseApiController
         $this->sendSuccess([], "Artist Exported");
     }
 
+    /**
+     * import artist from csv file
+     */
     public function importCsv()
     {
         if (isset($_FILES['csv_file'])) {

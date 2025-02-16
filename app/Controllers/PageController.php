@@ -9,16 +9,24 @@ use App\Models\User;
 
 class PageController
 {
+    /**
+     * returns landing page
+     */
     public function landing()
     {
         if(!(new Session)->auth())
         {
             header("Location: /login");
+            exit;
         } else {
             header("Location: /dashboard");
+            exit;
         }
     }
 
+    /**
+     * returns dashboard page
+     */
     public function dashboard()
     {
         $artist_count = (new Artist())->countAll();
@@ -26,5 +34,6 @@ class PageController
         $user_count = (new User())->countAll();
         $recent_songs = (new Music())->paginate(1, 10)['data'];
         require_once __DIR__ . '/../Views/auth/dashboard.php';
+        exit;
     }
 }

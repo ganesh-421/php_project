@@ -11,10 +11,17 @@ use App\Repositories\MusicRepository;
 class MusicController
 {
     private $repository;
+    /**
+     * instatiate music controller
+     */
     public function __construct()
     {
         $this->repository = new MusicRepository();
     }
+
+    /**
+     * list all music or the music of particular artist
+     */
     public function index()
     {
         if(isset($_GET['artist_id']))
@@ -30,6 +37,9 @@ class MusicController
         }
     }
 
+    /**
+     * create music for artist (post), create form (get)
+     */
     public function create()
     {
         $authUser = (((new Session())->auth()));
@@ -87,9 +97,13 @@ class MusicController
             $artist = (new Artist())->findBy('user_id', $authUser['id'])[0];
             $genres = ['rnb', 'country', 'classic', 'rock', 'jazz'];
             require_once __DIR__ . '/../Views/auth/music/create.php';
+            exit;
         }
     }
 
+    /**
+     * edit current artist's music (post), edit form (get)
+     */
     public function edit()
     {
         $id = $_REQUEST['music_id'];
@@ -107,6 +121,7 @@ class MusicController
         {
             $_SESSION['error'] = "Unauthorized.";
             header("Location: /");
+            exit;
         }                     
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -124,7 +139,7 @@ class MusicController
                 "genre" => $_POST['genre'],
                 "updated_at" => date('Y-m-d H:i:s'),
             ];
-            
+
             $validator = new Validator($data, $rules, (new Music()));
     
             if(!$validator->validate()) {
@@ -150,14 +165,19 @@ class MusicController
             {
                 $_SESSION['error'] = "Unauthorized.";
                 header("Location: /");
+                exit;
             }
             $music = $this->repository->findBy(['id' => $id])[0];
             $artists = (new Artist())->all();
             $genres = ['rnb', 'country', 'classic', 'rock', 'jazz'];
             require_once __DIR__ . '/../Views/auth/music/edit.php';
+            exit;
         }
     }
 
+    /**
+     * delete current artist's music
+     */
     public function delete()
     {
         $id = $_REQUEST['music_id'];

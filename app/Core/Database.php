@@ -8,10 +8,14 @@ use PDOException;
 class Database 
 {
     /**
-     * @var PDO instance $instance (connection to database).
+     * @var object PDO instance $instance (connection to database).
     */    
     private static $instance = null;
 
+    /**
+     * creates connection with mysql database server
+     * @return object PDO instance
+     */
     public static function getConnection()
     {
         $user = Config::database('user'); 

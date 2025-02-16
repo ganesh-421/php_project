@@ -11,6 +11,9 @@ class UserController
 {
     private $repository;
 
+    /**
+     * instantiate user controller
+     */
     public function __construct()
     {
         if((new Session)->role() !== 'super_admin')
@@ -22,13 +25,20 @@ class UserController
         $this->repository = new AuthRepository();
     }
 
+    /**
+     * list all the users
+     */
     public function index()
     {
         $page = isset($_GET['page']) ? $_GET['page'] : 1;
         $users = $this->repository->paginated($page, 5);
         require_once __DIR__ . '/../Views/auth/user/index.php';
+        exit;
     }
 
+    /**
+     * create a new user (post), create form (get)
+     */
     public function create()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -41,7 +51,7 @@ class UserController
                 "dob" => 'required|before:today',
                 "gender" => 'required|in:m,f,o',
                 "address" => 'required|min:3|max:255',
-                "role" => 'required|in:super_admin,admin,artist',
+                "role" => 'required|in:super_admin,artist_manager,artist',
             ];
             $data = [
                 "first_name" => $_POST['first_name'],
@@ -69,15 +79,18 @@ class UserController
                 header("Location: /users");
                 exit;
             } else {
-                // $_SESSION['error'] = "User Couldn't be Created";
                 header("Location: /create/user");
                 exit;
             }
         } else {
             require_once __DIR__ . '/../Views/auth/user/create.php';
+            exit;
         }
     }
 
+    /**
+     * update user (post), edit form (get)
+     */
     public function edit()
     {
         $id = $_REQUEST['user_id'];
@@ -94,17 +107,17 @@ class UserController
                 "last_name" => 'min:3|max:255',
                 "email" => 'required|email|unique:user,email,id,' . $id,
                 "password" => 'min:8|max:15',
-                "phone" => 'min:10|max:10|unique:user,phone',
+                "phone" => 'min:10|max:10|unique:user,phone,id,' . $id,
                 "dob" => 'before:today',
                 "gender" => 'in:m,f,o',
                 "address" => 'min:3|max:255',
-                "role" => 'in:super_admin,admin,artist',
+                "role" => 'in:super_admin,artist_manager,artist',
             ];
             $data = [
                 "first_name" => $_POST['first_name'],
                 "last_name" => $_POST['last_name'],
                 "email" => $_POST['email'],
-                "password" => password_hash($_POST['password'], PASSWORD_DEFAULT),
+                "password" => $_POST['password'],
                 "phone" => $_POST['phone'],
                 "dob" => $_POST['dob'],
                 "gender" => $_POST['gender'],
@@ -114,7 +127,7 @@ class UserController
             ];
 
             $validator = new Validator($data, $rules, (new User()));
-            
+
             if(!$validator->validate()) {
                 $errors = $validator->errors();
                 $_SESSION['errors'] = $errors;
@@ -129,16 +142,19 @@ class UserController
                 header("Location: /users");
                 exit;
             } else {
-                // $_SESSION['error'] = "User Couldn't be Updated";
                 header("Location: /update/user?user_id=".$id);
                 exit;
             }
         } else {
             $user = $this->repository->findBy(['id' => $id])[0];
             require_once __DIR__ . '/../Views/auth/user/edit.php';
+            exit;
         }
     }
 
+    /**
+     * delete user
+     */
     public function delete()
     {
         $id = $_REQUEST['user_id'];

@@ -3,11 +3,20 @@
 namespace App\Core;
 
 use App\Core\Exceptions\RouteNotFoundException;
+use App\Core\Ratelimits\RateLimiter;
 use BadMethodCallException;
+use Exception;
 
 class Router
 {
+    /**
+     * @param array web routes with controller methods and middleware
+     */
     private static $routes = [];
+
+    /**
+     * @param array api routes with controller methods and middleware 
+     */
     private static $apiRoutes = [];
 
     /**
@@ -65,45 +74,83 @@ class Router
             self::$routes['DELETE'][$uri] = ['controller' => $controllerMethod, 'middleware' => $middleware];
     }
 
+    /**
+     * dispatch respective routes according to request
+     */
     public static function dispatch()
     {
+        $limiter = new RateLimiter();
+
+        if(!$limiter->isAllowed())
+        {
+            if(Request::expectJson())
+            {
+                header('Content-Type: application/json');
+                http_response_code(429);
+                echo json_encode([
+                    'success' => false,
+                    'message' => "Too Many Requests"
+                ]);
+                exit;
+            } else {
+                http_response_code(429);
+                $_SESSION['error'] = "Too Many Requests";
+                exit;
+            }
+        }
+
         if(Request::expectJson())
             self::dispatchRoute(static::$apiRoutes);
         else 
             self::dispatchRoute(self::$routes);
     }
 
+    /**
+     * dispatch the routes given
+     * @param array routes
+     */
     private static function dispatchRoute($routes)
     {
-        $uri = $_SERVER['REQUEST_URI'];
-        
-        $method = $_SERVER['REQUEST_METHOD'];
-        // query parameters removal
-        $uri = strtok($uri, '?');
-        
-        if (isset($routes[$method][$uri])) {
-            $route = $routes[$method][$uri];
-            if (!empty($route['middleware'])) {
-                $middlewareClass = "App\\Middlewares\\" . ucfirst($route['middleware']) . "Middleware";
-                if (class_exists($middlewareClass)) {
-                    $middlewareInstance = new $middlewareClass();
-                    if (!$middlewareInstance->handle()) {
-                        return;
+        try {
+            $uri = $_SERVER['REQUEST_URI'];
+            
+            $method = $_SERVER['REQUEST_METHOD'];
+            // query parameters removal
+            $uri = strtok($uri, '?');
+            
+            if (isset($routes[$method][$uri])) {
+                $route = $routes[$method][$uri];
+                if (!empty($route['middleware'])) {
+                    $middlewareClass = "App\\Middlewares\\" . ucfirst($route['middleware']) . "Middleware";
+                    if (class_exists($middlewareClass)) {
+                        $middlewareInstance = new $middlewareClass();
+                        if (!$middlewareInstance->handle()) {
+                            return;
+                        }
                     }
                 }
+                $controllerMethod = explode('@', $route['controller']);
+                $controller = Request::expectJson() ? "App\\Controllers\\Api\\" . $controllerMethod[0] : "App\\Controllers\\" . $controllerMethod[0];
+                $method = $controllerMethod[1];
+                if(!method_exists($controller, $method))
+                {
+                    throw new BadMethodCallException("Method " . $method . " Doesn't Exists Controller " . $controller);
+                }
+                $controllerInstance = new $controller();
+                $controllerInstance->$method();
+    
+            } else {
+                throw new RouteNotFoundException();
             }
-            $controllerMethod = explode('@', $route['controller']);
-            $controller = Request::expectJson() ? "App\\Controllers\\Api\\" . $controllerMethod[0] : "App\\Controllers\\" . $controllerMethod[0];
-            $method = $controllerMethod[1];
-            if(!method_exists($controller, $method))
+        } catch(Exception $e)
+        {
+            if(Request::expectJson())
             {
-                throw new BadMethodCallException("Method " . $method . " Doesn't Exists Controller " . $controller);
+                header('Content-Type: application/json');
+                http_response_code(500);
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+                exit;
             }
-            $controllerInstance = new $controller();
-            $controllerInstance->$method();
-
-        } else {
-            throw new RouteNotFoundException();
         }
     }
 }

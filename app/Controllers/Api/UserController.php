@@ -10,8 +10,14 @@ use App\Transformers\UserTransformer;
 
 class UserController extends BaseApiController
 {
+    /**
+     * @var \\App\\Repositories\\AuthRepository
+     */
     private $repository;
 
+    /**
+     * instantiate user controller
+     */
     public function __construct()
     {
         if((new Session)->role() !== 'super_admin')
@@ -21,15 +27,23 @@ class UserController extends BaseApiController
         $this->repository = new AuthRepository();
     }
 
+    /**
+     * returns json response of paginated users list
+     */
     public function index()
     {
         $page = isset($_GET['page']) ? $_GET['page'] : 1;
         $users = UserTransformer::transformPaginated($this->repository->paginated($page, 5));
-        return $this->sendSuccess($users, "List Of Music");
+        return $this->sendSuccess($users, "List Of Users");
     }
 
+    /**
+     * validates and stores user detail obtained in json format
+     */
     public function create()
     {
+        $vars = file_get_contents("php://input");
+        $post_vars = json_decode($vars, true);
         $rules = [
             "first_name" => 'required|min:3|max:255',
             "last_name" => 'required|min:3|max:255',
@@ -39,18 +53,18 @@ class UserController extends BaseApiController
             "dob" => 'required|before:today',
             "gender" => 'required|in:m,f,o',
             "address" => 'required|min:3|max:255',
-            "role" => 'required|in:super_admin,admin,artist',
+            "role" => 'required|in:super_admin,artist_manager,artist',
         ];
         $data = [
-            "first_name" => $_POST['first_name'],
-            "last_name" => $_POST['last_name'],
-            "email" => $_POST['email'],
-            "password" => $_POST['password'],
-            "phone" => $_POST['phone'],
-            "dob" => $_POST['dob'],
-            "gender" => $_POST['gender'],
-            "address" => $_POST['address'],
-            "role" => $_POST['role'],
+            "first_name" => $post_vars['first_name'],
+            "last_name" => $post_vars['last_name'],
+            "email" => $post_vars['email'],
+            "password" => $post_vars['password'],
+            "phone" => $post_vars['phone'],
+            "dob" => $post_vars['dob'],
+            "gender" => $post_vars['gender'],
+            "address" => $post_vars['address'],
+            "role" => $post_vars['role'],
             "created_at" => date('Y-m-d H:i:s'),
             "updated_at" => date('Y-m-d H:i:s'),
         ];
@@ -68,6 +82,9 @@ class UserController extends BaseApiController
         }
     }
 
+    /**
+     * validates and updates user detail obtained in json format
+     */
     public function edit()
     {
         $vars = file_get_contents("php://input");
@@ -84,7 +101,7 @@ class UserController extends BaseApiController
             "first_name" => $post_vars['first_name'] ?? $user['first_name'],
             "last_name" => $post_vars['last_name'] ?? $user['last_name'],
             "email" => $post_vars['email'] ?? $user['email'],
-            "password" =>  !empty($post_vars['password']) ? password_hash($post_vars['password'], PASSWORD_DEFAULT) : $user['password'],
+            "password" =>  $post_vars['password'],
             "phone" => $post_vars['phone'] ?? $user['phone'],
             "dob" => $post_vars['dob'] ?? $user['dob'],
             "gender" => $post_vars['gender'] ?? $user['gender'],
@@ -101,7 +118,7 @@ class UserController extends BaseApiController
             "dob" => 'before:today',
             "gender" => 'in:m,f,o',
             "address" => 'min:3|max:255',
-            "role" => 'in:super_admin,admin,artist',
+            "role" => 'in:super_admin,artist_manager,artist',
         ];
         
         $validator = new Validator($data, $rules, (new User()));
@@ -119,6 +136,9 @@ class UserController extends BaseApiController
         }
     }
 
+    /**
+     * delete user record for given id 
+     */
     public function delete()
     {
         $vars = file_get_contents("php://input");
@@ -129,16 +149,14 @@ class UserController extends BaseApiController
         {
             return $this->sendError("User Not Found", 404);
         }
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if((new Session())->auth()['id'] == $id) {
-                return $this->sendError("User Mustn't Delete Themselves");
-            }
-            $result = $this->repository->delete($id);
-            if($result) {
-                return $this->sendSuccess([], "User Deleted Succesfully");
-            } else {
-                return $this->sendError("User Couldn't be Deleted");
-            }
+        if((new Session())->auth()['id'] == $id) {
+            return $this->sendError("User Mustn't Delete Themselves");
+        }
+        $result = $this->repository->delete($id);
+        if($result) {
+            return $this->sendSuccess([], "User Deleted Succesfully");
+        } else {
+            return $this->sendError("User Couldn't be Deleted");
         }
     }
 }

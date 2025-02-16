@@ -8,24 +8,33 @@ use App\Repositories\AuthRepository;
 
 class AuthController extends BaseApiController
 {
+    /**
+     * @var \\App\\Repositories\\AuthRepository
+     */
     private $repository;
+
+    /**
+     * instantiate auth controller
+     */
     public function __construct()
     {
         $this->repository = new AuthRepository();
     }
 
     /**
-     * logs user into the system after verifying credentials
+     * validate and logs user into the system after verifying credentials
      */
     public function login()
     {
+        $vars = file_get_contents("php://input");
+        $post_vars = json_decode($vars, true);
         $rules = [
             'email' => "required|email|exists:user,email",
             'password' => 'required'
         ];
         $data = [
-            'email' => $_POST['email'],
-            'password' => $_POST['password']
+            'email' => $post_vars['email'],
+            'password' => $post_vars['password']
         ];
 
         $validator = new Validator($data, $rules, new User());
@@ -35,20 +44,23 @@ class AuthController extends BaseApiController
             return $this->sendError("Validation Error", 422, $errors);
         }
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $user_id = $this->repository->login($_POST['email'], $_POST['password']);
-            if($user_id)
-            {
-                $token = $this->repository->model->createToken($user_id);
-                $this->sendSuccess(['token' => $token], "Succesfully Logged In");
-            } else {
-                $this->sendError("Authentication Failed");
-            }
-        } 
+        $user_id = $this->repository->login($post_vars['email'], $post_vars['password']);
+        if($user_id)
+        {
+            $token = $this->repository->model->createToken($user_id);
+            $this->sendSuccess(['token' => $token], "Succesfully Logged In");
+        } else {
+            $this->sendError("Authentication Failed");
+        }
     }
 
+    /**
+     * validate and register new user
+     */
     public function register()
     {
+        $vars = file_get_contents("php://input");
+        $post_vars = json_decode($vars, true);
         $rules = [
             "first_name" => 'required|min:3|max:255',
             "last_name" => 'required|min:3|max:255',
@@ -58,18 +70,18 @@ class AuthController extends BaseApiController
             "dob" => 'required|before:today',
             "gender" => 'required|in:m,f,o',
             "address" => 'required|min:3|max:255',
-            "role" => 'required|in:super_admin,admin,artist',
+            "role" => 'required|in:super_admin,artist_manager,artist',
         ];
         $data = [
-            "first_name" => $_POST['first_name'],
-            "last_name" => $_POST['last_name'],
-            "email" => $_POST['email'],
-            "password" => $_POST['password'],
-            "phone" => $_POST['phone'],
-            "dob" => $_POST['dob'],
-            "gender" => $_POST['gender'],
-            "address" => $_POST['address'],
-            "role" => $_POST['role'],
+            "first_name" => $post_vars['first_name'],
+            "last_name" => $post_vars['last_name'],
+            "email" => $post_vars['email'],
+            "password" => $post_vars['password'],
+            "phone" => $post_vars['phone'],
+            "dob" => $post_vars['dob'],
+            "gender" => $post_vars['gender'],
+            "address" => $post_vars['address'],
+            "role" => $post_vars['role'],
             "created_at" => date('Y-m-d H:i:s'),
             "updated_at" => date('Y-m-d H:i:s'),
         ];
@@ -87,6 +99,9 @@ class AuthController extends BaseApiController
         }
     }
 
+    /**
+     * logs user out
+     */
     public function logout()
     {
         $this->repository->logout();

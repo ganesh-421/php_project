@@ -12,7 +12,8 @@ class Session extends BaseModel
     public function __construct()
     {
         parent::__construct();
-        session_start();
+        if(session_status() === PHP_SESSION_DISABLED)
+            session_start();
         $this->table = "session";
     }
 
@@ -40,8 +41,12 @@ class Session extends BaseModel
     {
         if(!Request::expectJson())
         {
-            $token = $_SESSION['token'];
-            return $this->user($token);
+            if(isset($_SESSION['token']))
+            {
+                $token = $_SESSION['token'];
+                return $this->user($token);
+            }
+            return false;
         } else {
             $token = Request::getAuthSession();
             return $this->user($token);

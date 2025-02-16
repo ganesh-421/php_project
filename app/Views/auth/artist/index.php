@@ -19,7 +19,7 @@
         <div class="bg-white p-4 shadow rounded-lg">
             <div class="flex flex-col md:flex-row justify-between mb-4 space-y-2 md:space-y-0">
                 <input type="text" placeholder="Search..." class="border p-2 rounded-lg w-full md:w-auto">
-                <?php if(((new App\Models\Session())->role() === 'artist_manager')) { ?>
+                <?php if(($role === 'artist_manager')) { ?>
                     <div class="flex gap-5">
                         <button onclick="showCsvModal()" class="bg-gray-600 text-white px-4 py-2 rounded-lg" title="Impoer From CSV File">Import</button>
                         <form action="/export/artist" method="POST">
@@ -61,7 +61,7 @@
                                 <td class="border p-2"><?= $artist['no_of_albums_released']  ?></td>
                                 <td class="border p-2 flex space-x-2">
                                     <a href="/musics?artist_id=<?= $artist['id'] ?>" class="text-green-600 flex items-center"><i class="ph ph-music-notes mr-1"></i> Songs</a>
-                                    <?php if(($_SESSION['role'] === 'artist_manager')) { ?>
+                                    <?php if(($role === 'artist_manager')) { ?>
                                         <a href="/update/artist?artist_id=<?= $artist['id'] ?>" class="text-blue-600 flex items-center"><i class="ph ph-pencil-line mr-1"></i> Edit</a>
                                         <button onclick="showDeleteModal('artist_id', <?= $artist['id']  ?>)" class="text-red-600 flex items-center"><i class="ph ph-trash mr-1"></i> Delete</button>
                                     <?php } ?>

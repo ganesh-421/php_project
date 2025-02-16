@@ -4,7 +4,12 @@ namespace App\Core;
 
 class Config
 {
-    public static function database($key)
+    /**
+     * configs related to database
+     * @param string key
+     * allowed keys: [name, user, password, host]
+     */
+    public static function database($key): string
     {
         switch($key)
         {
@@ -19,7 +24,12 @@ class Config
         }
     }
 
-    public static function jwt($key)
+    /**
+     * configs related to jwt 
+     * @param string key
+     * allowed keys: [secret, algorithm]
+     */
+    public static function jwt($key): string
     {
         switch($key)
         {
@@ -30,7 +40,12 @@ class Config
         }
     }
 
-    private static function getEnvValue($key) {
+    /**
+     * get value for provided key from .env
+     * @param string key
+     */
+    private static function getEnvValue($key): string|null
+    {
         $envFile = __DIR__ . '/../../.env';
         if (!file_exists($envFile)) {
             return null;
