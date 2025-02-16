@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Core\Request;
+use Exception;
 
 class Session extends BaseModel
 {
@@ -39,17 +40,22 @@ class Session extends BaseModel
      */
     public function auth()
     {
-        if(!Request::expectJson())
-        {
-            if(isset($_SESSION['token']))
+        try {
+            if(!Request::expectJson())
             {
-                $token = $_SESSION['token'];
+                if(isset($_SESSION['token']))
+                {
+                    $token = $_SESSION['token'];
+                    return $this->user($token);
+                }
+                return false;
+            } else {
+                $token = Request::getAuthSession();
                 return $this->user($token);
             }
+        } catch(Exception $e)
+        {
             return false;
-        } else {
-            $token = Request::getAuthSession();
-            return $this->user($token);
         }
     }
 
